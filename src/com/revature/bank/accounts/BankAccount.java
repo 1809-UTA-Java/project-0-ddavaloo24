@@ -4,16 +4,23 @@ import java.lang.Math;
 
 public class BankAccount {
 
-    int accID;
-    String username;
-    double balance;
+    public String accID;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private double balance;
+    public boolean approved;
 
     //TODO: Create a constructor
     //TODO: Make the AccID a unqiue number and have it be randomized
-    public BankAccount( String username, double balance ) {
+    public BankAccount( String username, String firstName, String lastName, double balance, boolean approved ) {
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.balance = balance;
-        this.accID = ( int )( Math.random() * 99999 ) + 1;
+        this.accID = lastName + ( int )( Math.random() * 99 ) + 1;
+        this.approved = approved;
+
     }
 
 
@@ -40,6 +47,10 @@ public class BankAccount {
     //TODO: Find out how to transfer money between two accounts
     public void transfer( double amt, int accID ) {
 
+    }
+
+    public String toString() {
+        return (accID + " " +balance + "\n");
     }
 
 
