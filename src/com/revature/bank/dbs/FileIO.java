@@ -26,15 +26,23 @@ public class FileIO {
 
         String str = null;
         String fullFileName = pathway + fileName;
+        File file = new File(fullFileName);
 
-        try( Scanner sc = new Scanner(fullFileName) ) {
+        if(!file.exists()) {
+            return false;
+        }
+
+        try( Scanner sc = new Scanner(file) ) {
 
             while( sc.hasNextLine() ) {
 
-                str = sc.nextLine();
-                if( str.equals(pattern) ) {
+                str = sc.findInLine(pattern);
+
+                if( str != null ) {
                     return true;
                 }
+
+                sc.nextLine();
 
             }
         } catch ( Exception e ) {
@@ -45,19 +53,21 @@ public class FileIO {
     }
 
 
-    public static Object deSerialize(String fileName) {
+    public static <T> T deSerialize(String fileName, Class<T> type) {
 
         String fullFileName = pathway + fileName;
 
+        File file = new File(fullFileName);
+
         try {
 
-            FileInputStream fis = new FileInputStream(fullFileName);
+            FileInputStream fis = new FileInputStream(file);
             BufferedInputStream bis = new BufferedInputStream(fis);
             ObjectInputStream ois = new ObjectInputStream(bis);
             Object obj = ois.readObject();
 
             ois.close();
-            return obj;
+            return (T) obj;
 
         } catch(IOException e) {
             e.printStackTrace();

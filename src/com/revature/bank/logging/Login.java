@@ -3,6 +3,7 @@ package com.revature.bank.logging;
 import java.io.Console;
 import java.io.FileReader;
 import java.util.*;
+import java.io.*;
 import com.revature.bank.accounts.*;
 import com.revature.bank.people.*;
 import com.revature.bank.dbs.*;
@@ -24,6 +25,8 @@ public class Login {
     protected Customer currentCustomer = null;
     protected Employee currentEmployee = null;
     protected BankAdmin currentBankAdmin = null;
+
+    private String pathway = "/home/developer/Workspace/project-0-ddavaloo24/src/com/revature/bank/dbs/";
 
     protected String username;
     protected String password;
@@ -78,6 +81,8 @@ public class Login {
         //Write to the Logins.txt file the login information just created in a one line format
         String pattern = username + "_" + password + "_" + firstName + "_" + lastName + "\n";
 
+        System.out.println(pattern);
+
         //Write the pattern of personal information to a central database of user accounts
         FileIO.write("AllUserAccounts", pattern);
 
@@ -119,37 +124,42 @@ public class Login {
     public Customer loginCustomer() {
 
         Scanner sc1 = new Scanner(System.in);
-        String pattern;
         boolean lookupStatus;
+        String accessor;
         String fileName;
+        String fullFile = pathway + "AllCustomers";
+        File file = new File(fullFile);
 
         do {
 
-            System.out.println( "Please enter you username and password" );
-            System.out.print( "Username: " );
+            System.out.println("Please enter you username and password");
+            System.out.print("Username: ");
             username = sc1.nextLine();
             System.out.print("Password: ");
             password = sc1.nextLine();
 
-            pattern = username + "_" + password;
+            String pattern = username + "_" + password;
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
 
                 fileName = null;
 
-                Scanner sc = new Scanner("AllCustomers");
-                while(sc.hasNextLine()) {
+                try(Scanner sc = new Scanner(file)) {
+                    while(sc.hasNextLine()) {
 
-                    sc.nextLine();
-                    if(sc.equals(username)) {
-                        fileName = sc.nextLine();
-                        break;
+                        accessor = sc.nextLine();
+                        if(accessor.equals(username)) {
+
+                            fileName = sc.nextLine();
+                            break;
+                        }
                     }
+                } catch(FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                sc.close();
 
-                currentCustomer = FileIO.deSerialize(fileName);
+                currentCustomer = FileIO.deSerialize(fileName, Customer.class);
                 return currentCustomer;
             }
             else {

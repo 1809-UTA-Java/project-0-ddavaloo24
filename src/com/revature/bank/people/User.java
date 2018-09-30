@@ -8,8 +8,8 @@ public abstract class User implements Serializable{
     protected boolean accessToCustomerInfo;
     protected boolean ableToAcceptAccs;
     protected boolean ableToCancelAccs;
-    protected transient String firstName;
-    protected transient String lastName;
+    protected String firstName;
+    protected String lastName;
     protected transient String username;
     protected transient String password;
     protected transient ArrayList<BankAccount> myAccounts = new ArrayList<>();
