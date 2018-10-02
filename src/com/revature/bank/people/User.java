@@ -10,9 +10,9 @@ public abstract class User implements Serializable{
     protected boolean ableToCancelAccs;
     protected String firstName;
     protected String lastName;
-    protected transient String username;
-    protected transient String password;
-    protected transient ArrayList<BankAccount> myAccounts = new ArrayList<>();
+    protected String username;
+    protected String password;
+    protected ArrayList<BankAccount> myAccounts = new ArrayList<>();
 
     public User( String username, String password, String firstName, String lastName,
             boolean accessToCustomerInfo, boolean ableToAcceptAccs, boolean ableToCancelAccs ) {
@@ -25,21 +25,29 @@ public abstract class User implements Serializable{
                 this.ableToCancelAccs = ableToCancelAccs;
             }
 
-    public void displayMyAccs() {
+    public int displayMyAccs() {
+        int i = 0;
         System.out.println("Your available accounts are:");
 
         if( myAccounts.isEmpty() ) {
-            System.out.println("You have no accounts");
+            System.out.println("You have no accounts.\n");
         }
         else {
             for(BankAccount bA : myAccounts) {
-                bA.toString();
+                i++;
+                System.out.println(i + ". " + bA.toString());
             }
+            System.out.print("\n");
         }
+
+        return i;
     }
 
-    public abstract void applyForAcc();
     public String toString() {
         return firstName + " " + lastName;
     }
+
+    public abstract void loadAccounts();
+    public abstract void writeAccounts();
+    public abstract String applyForAcc();
 }

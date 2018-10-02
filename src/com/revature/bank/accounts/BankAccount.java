@@ -1,26 +1,24 @@
 package com.revature.bank.accounts;
 
+import java.io.Serializable;
 import java.lang.Math;
 
-public class BankAccount {
+public class BankAccount implements Serializable {
 
-    public String accID;
+    private String accID;
     private String username;
     private String firstName;
     private String lastName;
     private double balance;
-    public boolean approved;
 
     //TODO: Create a constructor
     //TODO: Make the AccID a unqiue number and have it be randomized
-    public BankAccount( String username, String firstName, String lastName, double balance, boolean approved ) {
+    public BankAccount( String username, String firstName, String lastName, double balance) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.balance = balance;
-        this.accID = lastName + ( int )( Math.random() * 99 ) + 1;
-        this.approved = approved;
-
+        this.accID = lastName + ( int )( Math.random() * 9999 ) + 1;
     }
 
 
@@ -50,7 +48,11 @@ public class BankAccount {
     }
 
     public String toString() {
-        return (accID + " " +balance + "\n");
+        return (accID + " has a balance of $" + balance);
+    }
+
+    public String getBankID() {
+        return accID;
     }
 
 

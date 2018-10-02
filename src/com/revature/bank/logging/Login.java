@@ -11,17 +11,6 @@ import com.revature.bank.dbs.*;
 
 public class Login {
 
-    //Hashmap that holds a username to object relationship
-    protected HashMap<String, Customer> allCustomers = new HashMap<>();
-    protected HashMap<String, Employee> allEmployees = new HashMap<>();
-    protected HashMap<String, BankAdmin> allAdmins = new HashMap<>();
-
-    //Holds all logins with username and password
-    protected HashMap<String, String> allLogins = new HashMap<>();
-
-    //Holds the username and the type of account (1 for customer, 2 for employee, 3 for admin)
-    protected HashMap<String, Integer> accountTypes = new HashMap<>();
-
     protected Customer currentCustomer = null;
     protected Employee currentEmployee = null;
     protected BankAdmin currentBankAdmin = null;
@@ -32,27 +21,54 @@ public class Login {
     protected String password;
     protected String firstName;
     protected String lastName;
+    protected int type;
 
     //Used for checking account creation checks
     protected boolean checker;
 
-    public void createAccount(int type) {
+    public void createAccount() {
         Scanner sc = new Scanner( System.in );
 
-        //Ask the user for account information
-        System.out.println("Please fill out the following to create an account:");
-
-        //First name request and check
         do {
+            System.out.println("What kind of account would you like to make? \n" +
+                                "1. Customer \n" +
+                                "2. Employee \n" +
+                                "3. Admin");
+
+            try{
+                try{
+                    type = Integer.parseInt(sc.nextLine());
+                } catch(NumberFormatException e) {
+                    System.out.println("\nYour chosen number must be either 1, 2, or 3");
+                    continue;
+                }
+
+                if(type < 4 && type > 0) {
+                    break;
+                }
+                else {
+                    System.out.println("\nYour chosen number must be either 1, 2, or 3");
+                }
+            } catch(InputMismatchException e) {
+                System.out.println("\nYou must choose either 1, 2, or 3 as your options");
+                sc.nextLine();
+            }
+        } while( true );
+
+        //Ask the user for account information
+        System.out.println("\nPlease fill out the following to create an account:");
+
+        do {
+            //First name request and check
             System.out.print("First name must be 2-20 characters with no numbers or special characters \n" +        
                     "First name : ");
-            firstName = sc.nextLine().trim();
+            firstName = sc.nextLine();
             checker = LoginValidator.nameChecker(firstName);
         } while(checker);
         checker = true;
 
-        //Last name request and check        
         do {
+            //Last name request and check
             System.out.print("Last name must be 2-20 characters with no numbers or special characters \n" +
                     "Last name: ");
             lastName = sc.nextLine().trim();
@@ -60,8 +76,8 @@ public class Login {
         } while(checker);
         checker = true;
 
-        //Username request and check
         do {
+            //Username request and check
             System.out.print("Username must be 6-12 characters and cannot include underscores or spaces \n" +
                         "Username : ");
             username = sc.nextLine();
@@ -69,8 +85,8 @@ public class Login {
         } while(checker);
         checker = true;
 
-        //Password request and check
         do{
+            //Password request and check
             System.out.print("Password must be 8-12 characters and cannot include underscores or spaces \n" +
                         "Password: ");
             password = sc.nextLine();
@@ -81,39 +97,34 @@ public class Login {
         //Write to the Logins.txt file the login information just created in a one line format
         String pattern = username + "_" + password + "_" + firstName + "_" + lastName + "\n";
 
-        System.out.println(pattern);
-
         //Write the pattern of personal information to a central database of user accounts
         FileIO.write("AllUserAccounts", pattern);
 
         switch(type) {
+            case 1:
             //Create a new customer and add to a doc that holds the username and customerID
             //Also create a file that is titled the customerID and holds the customer object
-            case 1:
             Customer c = new Customer(username, password, firstName, lastName);
             pattern = username + "\n" + c.getCustomerID() + "\n";
             FileIO.write("AllCustomers", pattern);
             FileIO.serialize(c.getCustomerID(), c);
             break;
-
+            case 2:
             //Create a new employee and store it into a file titled its employeeID
             //Also add to file that holds all employee accounts using username and employeeID
-            case 2:
             Employee e = new Employee(username, password, firstName, lastName);
             pattern = username + "\n" + e.getEmployeeID() + "\n";
             FileIO.write("AllEmployees", pattern);
             FileIO.serialize(e.getEmployeeID(), e);
             break;
-
+            case 3:
             //Create a new admin and serialize it into a file using the AdminID
             //Add the admin username and ID to a database for admin
-            case 3:
             BankAdmin b = new BankAdmin(username, password, firstName, lastName);
             pattern = username + "\n" + b.getBankAdminID() + "\n";
             FileIO.write("AllAdmins", pattern);
             FileIO.serialize(b.getBankAdminID(), b);
             break;
-
             default:
             System.out.println("Invalid person");
         }
@@ -131,20 +142,17 @@ public class Login {
         File file = new File(fullFile);
 
         do {
-
-            System.out.println("Please enter you username and password");
+            System.out.println("\nPlease enter you username and password");
             System.out.print("Username: ");
             username = sc1.nextLine();
             System.out.print("Password: ");
             password = sc1.nextLine();
-
             String pattern = username + "_" + password;
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
 
                 fileName = null;
-
                 try(Scanner sc = new Scanner(file)) {
                     while(sc.hasNextLine()) {
 
@@ -156,14 +164,21 @@ public class Login {
                         }
                     }
                 } catch(FileNotFoundException e) {
-                    e.printStackTrace();
+                    System.out.println("There is no customer account with those credentials");
+                    continue;
+                }
+
+                if(fileName == null) {
+                    return null;
                 }
 
                 currentCustomer = FileIO.deSerialize(fileName, Customer.class);
+                currentCustomer.loadAccounts();
                 return currentCustomer;
             }
             else {
                 System.out.println("Your username or password was incorrect. Please try again.");
+                return null;
             }
         } while(currentCustomer == null);
 
@@ -172,53 +187,109 @@ public class Login {
     }
 
     public Employee loginEmployee() {
-        Scanner sc = new Scanner( System.in );
+        Scanner sc1 = new Scanner(System.in);
+        boolean lookupStatus;
+        String accessor;
+        String fileName;
+
+        String fullFile = pathway + "AllEmployees";
+        File file = new File(fullFile);
 
         do {
-
-            System.out.println( "Please enter you username and password" );
-            System.out.print( "Username: " );
-            username = sc.nextLine();
+            System.out.println("\nPlease enter you username and password");
+            System.out.print("Username: ");
+            username = sc1.nextLine();
             System.out.print("Password: ");
-            password = sc.nextLine();
+            password = sc1.nextLine();
+            String pattern = username + "_" + password;
 
-            if ( allLogins.get(username).equals(password) ) {
+            lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
+            if(lookupStatus) {
 
-                return allEmployees.get(username);
+                fileName = null;
+                try(Scanner sc = new Scanner(file)) {
+                    while(sc.hasNextLine()) {
+
+                        accessor = sc.nextLine();
+                        if(accessor.equals(username)) {
+
+                            fileName = sc.nextLine();
+                            break;
+                        }
+                    }
+                } catch(FileNotFoundException e) {
+                    System.out.println("There is no employee account with those credentials");
+                    continue;
+                }
+
+                if(fileName == null) {
+                    return null;
+                }
+
+                currentEmployee = FileIO.deSerialize(fileName, Employee.class);
+                return currentEmployee;
             }
             else {
-                System.out.println( "Wrong information entered" );
+                System.out.println("Your username or password was incorrect. Please try again.");
+                return null;
             }
-
         } while(currentEmployee == null);
 
-        sc.close();
+
+
+        sc1.close();
         return null;
     }
 
     public BankAdmin loginBankAdmin() {
-        Scanner sc = new Scanner( System.in );
+        Scanner sc1 = new Scanner(System.in);
+        boolean lookupStatus;
+        String accessor;
+        String fileName;
+        String fullFile = pathway + "AllAdmins";
+        File file = new File(fullFile);
 
         do {
-
-            System.out.println( "Please enter you username and password" );
-            System.out.print( "Username: " );
-            username = sc.nextLine();
+            System.out.println("\nPlease enter you username and password");
+            System.out.print("Username: ");
+            username = sc1.nextLine();
             System.out.print("Password: ");
-            password = sc.nextLine();
+            password = sc1.nextLine();
+            String pattern = username + "_" + password;
 
-            if ( allLogins.get(username).equals(password) ) {
+            lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
+            if(lookupStatus) {
 
-                return allAdmins.get(username);
+                fileName = null;
+                try(Scanner sc = new Scanner(file)) {
+                    while(sc.hasNextLine()) {
+
+                        accessor = sc.nextLine();
+                        if(accessor.equals(username)) {
+
+                            fileName = sc.nextLine();
+                            break;
+                        }
+                    }
+                } catch(FileNotFoundException e) {
+                    System.out.println("There is no admin account with those credentials");
+                    continue;
+                }
+
+                if(fileName == null) {
+                    return null;
+                }
+
+                currentBankAdmin = FileIO.deSerialize(fileName, BankAdmin.class);
+                return currentBankAdmin;
             }
             else {
-                System.out.println( "Wrong information entered" );
+                System.out.println("Your username or password was incorrect. Please try again.");
+                return null;
             }
-
         } while(currentBankAdmin == null);
 
-        sc.close();
+        sc1.close();
         return null;
     }
-
 }

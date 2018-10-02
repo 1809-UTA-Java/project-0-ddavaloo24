@@ -1,13 +1,14 @@
 package com.revature.bank.people;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.revature.bank.accounts.BankAccount;
 import com.revature.bank.people.*;
 
 public class Employee extends User implements Serializable {
     
-    private transient String employeeID;
+    private String employeeID;
 
     //Default constructor that initializes string values and uses the super constructor
     public Employee( String username, String password, String firstName, String lastName ) {
@@ -26,8 +27,14 @@ public class Employee extends User implements Serializable {
         return employeeID;
     }
 
-    public void applyForAcc() {
-        BankAccount newBA = new BankAccount(username, firstName, lastName, 0, true);
+    public String applyForAcc() {
+        BankAccount newBA = new BankAccount(username, firstName, lastName, 0);
         myAccounts.add(newBA);
+        return newBA.getBankID();
     }
+
+    public void loadAccounts(){
+        
+    }
+    public  void writeAccounts(){}
 }

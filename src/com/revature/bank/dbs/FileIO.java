@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class FileIO {
 
-    private static String pathway = "/home/developer/Workspace/project-0-ddavaloo24/src/com/revature/bank/dbs/";
+    public static String pathway = "/home/developer/Workspace/project-0-ddavaloo24/src/com/revature/bank/dbs/";
 
     public static void write(String fileName, String pattern) {
 
@@ -95,5 +95,5 @@ public class FileIO {
         } catch(IOException e) {
             e.printStackTrace();
         }
-	}
+    }
 }
