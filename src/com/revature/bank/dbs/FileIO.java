@@ -28,22 +28,15 @@ public class FileIO {
         String fullFileName = pathway + fileName;
         File file = new File(fullFileName);
 
-        if(!file.exists()) {
-            return false;
-        }
+        if(!file.exists()) return false;
 
         try( Scanner sc = new Scanner(file) ) {
 
             while( sc.hasNextLine() ) {
-
                 str = sc.findInLine(pattern);
 
-                if( str != null ) {
-                    return true;
-                }
-
+                if( str != null ) return true;
                 sc.nextLine();
-
             }
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -56,7 +49,6 @@ public class FileIO {
     public static <T> T deSerialize(String fileName, Class<T> type) {
 
         String fullFileName = pathway + fileName;
-
         File file = new File(fullFileName);
 
         try {

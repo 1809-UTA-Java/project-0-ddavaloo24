@@ -5,14 +5,17 @@ import java.lang.Math;
 
 public class BankAccount implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String accID;
     private String username;
     private String firstName;
     private String lastName;
     private double balance;
 
-    //TODO: Create a constructor
-    //TODO: Make the AccID a unqiue number and have it be randomized
+    //Default for all new accounts
+    private boolean approved = false;
+
+    //The default constructor setting all the fields
     public BankAccount( String username, String firstName, String lastName, double balance) {
         this.username = username;
         this.firstName = firstName;
@@ -21,39 +24,52 @@ public class BankAccount implements Serializable {
         this.accID = lastName + ( int )( Math.random() * 9999 ) + 1;
     }
 
+    
 
-    //Method for customer to remove money from account. Will not work if the amount being
-    //withdrawn is more than amount in account. Also tells you new balance.
+    //Method for customer to remove money from account
     public void withdraw( double amt ) {
-        
-        if( (balance - amt) < 0 ) {
-            System.out.println("Sorry but you cannot withdraw more than the amount in your account!");
+        if((balance - amt) < 0) {
+            System.out.println("\nSorry but you cannot withdraw more than the amount in your account!");
         }
         else {
             balance = balance - amt;
-            System.out.println("Withdraw Successful! Your new balance is " + balance);
-
+            System.out.println("\nWithdraw Successful! Your new balance is $" + balance);
         }
     }
 
     //Method to deposit money into account.
-    public void deposit( double amt ) {
+    public void deposit(double amt) {
         balance = balance + amt;
-        System.out.println("Deposit Successful! Your new balance is " + balance);
+        System.out.println("\nDeposit Successful! Your new balance is $" + balance);
     }
 
-    //TODO: Find out how to transfer money between two accounts
-    public void transfer( double amt, int accID ) {
-
+    //Transfer money between the calling account and target account with the selected amount
+    public void transfer(double amt, BankAccount target) {
+        if(balance < amt) {
+            System.out.println("\nYou do not have enough funds to transfer.");
+            return;
+        }
+        balance = balance - amt;
+        target.balance = target.balance + amt;
+        System.out.println("\nTransfer Complete! " + getBankID() + " has a balance of " + balance + 
+                " and " + target.getBankID() + " has a balance of " + target.balance);
     }
 
+    //Overriden to print the account number and corresponding balance
     public String toString() {
         return (accID + " has a balance of $" + balance);
     }
 
+    //Getter method for retrieving the ID of the current bank account
     public String getBankID() {
         return accID;
     }
 
+    public boolean getStatus() {
+        return approved;
+    }
 
+    public void setStatus(boolean status) {
+        approved = status;
+    }
 }

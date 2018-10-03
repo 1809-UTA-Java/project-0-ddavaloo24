@@ -30,10 +30,11 @@ public class Login {
         Scanner sc = new Scanner( System.in );
 
         do {
-            System.out.println("What kind of account would you like to make? \n" +
+            System.out.print("\nWhat kind of account would you like to make? \n" +
                                 "1. Customer \n" +
                                 "2. Employee \n" +
-                                "3. Admin");
+                                "3. Admin \n" + 
+                                "Choice: ");
 
             try{
                 try{
@@ -69,7 +70,7 @@ public class Login {
 
         do {
             //Last name request and check
-            System.out.print("Last name must be 2-20 characters with no numbers or special characters \n" +
+            System.out.print("\nLast name must be 2-20 characters with no numbers or special characters \n" +
                     "Last name: ");
             lastName = sc.nextLine().trim();
             checker = LoginValidator.nameChecker(lastName);
@@ -78,7 +79,7 @@ public class Login {
 
         do {
             //Username request and check
-            System.out.print("Username must be 6-12 characters and cannot include underscores or spaces \n" +
+            System.out.print("\nUsername must be 6-12 characters and cannot include underscores or spaces \n" +
                         "Username : ");
             username = sc.nextLine();
             checker = LoginValidator.usernameChecker(username);
@@ -87,7 +88,7 @@ public class Login {
 
         do{
             //Password request and check
-            System.out.print("Password must be 8-12 characters and cannot include underscores or spaces \n" +
+            System.out.print("\nPassword must be 8-12 characters and cannot include underscores or spaces \n" +
                         "Password: ");
             password = sc.nextLine();
             checker = LoginValidator.passwordChecker(password);
@@ -147,7 +148,7 @@ public class Login {
             username = sc1.nextLine();
             System.out.print("Password: ");
             password = sc1.nextLine();
-            String pattern = username + "_" + password;
+            String pattern = username + "_" + password + "_";
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
@@ -201,7 +202,7 @@ public class Login {
             username = sc1.nextLine();
             System.out.print("Password: ");
             password = sc1.nextLine();
-            String pattern = username + "_" + password;
+            String pattern = username + "_" + password + "_";
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
@@ -222,11 +223,10 @@ public class Login {
                     continue;
                 }
 
-                if(fileName == null) {
-                    return null;
-                }
+                if(fileName == null) return null;
 
                 currentEmployee = FileIO.deSerialize(fileName, Employee.class);
+                currentEmployee.loadAccounts();
                 return currentEmployee;
             }
             else {
@@ -255,7 +255,7 @@ public class Login {
             username = sc1.nextLine();
             System.out.print("Password: ");
             password = sc1.nextLine();
-            String pattern = username + "_" + password;
+            String pattern = username + "_" + password + "_";
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
@@ -263,10 +263,9 @@ public class Login {
                 fileName = null;
                 try(Scanner sc = new Scanner(file)) {
                     while(sc.hasNextLine()) {
-
                         accessor = sc.nextLine();
-                        if(accessor.equals(username)) {
 
+                        if(accessor.equals(username)) {
                             fileName = sc.nextLine();
                             break;
                         }
@@ -276,11 +275,10 @@ public class Login {
                     continue;
                 }
 
-                if(fileName == null) {
-                    return null;
-                }
+                if(fileName == null) return null;
 
                 currentBankAdmin = FileIO.deSerialize(fileName, BankAdmin.class);
+                currentBankAdmin.loadAccounts();
                 return currentBankAdmin;
             }
             else {

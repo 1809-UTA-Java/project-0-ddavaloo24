@@ -11,15 +11,16 @@ import com.revature.bank.people.*;
 
 public class Customer extends User implements Serializable{
     
+    private static final long serialVersionUID = 1L;
     private String customerID;
 
     //Default constructor that initializes string values and sets all bools to false
     public Customer( String username, String password, String firstName, String lastName ) {
-        super( username, password, firstName, lastName, false, false, false );
+        super( username, password, firstName, lastName);
         this.customerID = "c" + ( int )( Math.random() * 9999999 ) + 1;
     }
     public Customer( Customer c ) {
-        super( c.username, c.password, c.firstName, c.lastName, false, false, false );
+        super( c.username, c.password, c.firstName, c.lastName);
         this.customerID = "c" + ( int )( Math.random() * 9999999 ) + 1;
     }
 
@@ -47,7 +48,10 @@ public class Customer extends User implements Serializable{
         FileIO.serialize(newFileName, myAccounts);
     }
 
-    public BankAccount getAccount(int index) {
-        return myAccounts.get(index);
+    public void printMyInfo() {
+        System.out.println("\n" + getCustomerID() + "'s account information: \n" +
+                "Username " + username + "\n" +
+                "First name: " + firstName + "\n" +
+                "Last Name: " + lastName);
     }
 }
