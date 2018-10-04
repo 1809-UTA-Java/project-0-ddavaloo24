@@ -9,6 +9,11 @@ import com.revature.bank.accounts.BankAccount;
 import com.revature.bank.dbs.FileIO;
 import com.revature.bank.people.*;
 
+/**
+ * Creates a customer that has the ability to create a bank account
+ * (pending approval from an employee or admin) and deposit, withdraw,
+ * and transfer money between its accounts
+ */
 public class Customer extends User implements Serializable{
     
     private static final long serialVersionUID = 1L;
@@ -19,21 +24,22 @@ public class Customer extends User implements Serializable{
         super( username, password, firstName, lastName);
         this.customerID = "c" + ( int )( Math.random() * 9999999 ) + 1;
     }
+
+    //Clone constructor
     public Customer( Customer c ) {
         super( c.username, c.password, c.firstName, c.lastName);
         this.customerID = "c" + ( int )( Math.random() * 9999999 ) + 1;
     }
 
-    public String getCustomerID() {
-        return customerID;
-    }
-
+    //Create a pending account
     public String applyForAcc() {
-        BankAccount newBA = new BankAccount(username, firstName, lastName, 0.00);
+        BankAccount newBA = new BankAccount(lastName, 0);
         myAccounts.add(newBA);
         return newBA.getBankID();
     }
 
+    //Load accounts from the personal file to arraylist
+    @SuppressWarnings("unchecked")
     public void loadAccounts() {
         File dir = new File(FileIO.pathway);
         File[] files = dir.listFiles((dir1, name) -> name.startsWith(getCustomerID() + "bank"));
@@ -43,15 +49,21 @@ public class Customer extends User implements Serializable{
         }
     }
 
+    //Write accounts to a personal file
     public void writeAccounts() {
         String newFileName = getCustomerID() + "bank";
         FileIO.serialize(newFileName, myAccounts);
     }
 
+    //Prints the user infor. To be used by the employee
     public void printMyInfo() {
         System.out.println("\n" + getCustomerID() + "'s account information: \n" +
-                "Username " + username + "\n" +
+                "Username: " + username + "\n" +
                 "First name: " + firstName + "\n" +
                 "Last Name: " + lastName);
+    }
+
+    public String getCustomerID() {
+        return customerID;
     }
 }

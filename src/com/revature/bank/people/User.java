@@ -4,15 +4,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import com.revature.bank.accounts.BankAccount;
 
+/**
+ * Abstract class that gives basic functionality and markers to
+ * the customer, admin, and employee
+ */
 public abstract class User implements Serializable{
 
     private static final long serialVersionUID = 1L;
+
     protected String firstName;
     protected String lastName;
     protected String username;
     protected String password;
     protected ArrayList<BankAccount> myAccounts = new ArrayList<>();
 
+    //Default constructor
     public User( String username, String password, String firstName, String lastName) {
                 this.username = username;
                 this.password = password;
@@ -20,14 +26,13 @@ public abstract class User implements Serializable{
                 this.lastName = lastName;
             }
 
+    //Display the accounts and return the indicies of the approved accounts
     public ArrayList<Integer> displayMyAccs() {
         int i = 0;
         int approvedTotal = 0;
         ArrayList<Integer> approvedIndex = new ArrayList<>();
 
-        if( myAccounts.isEmpty() ) {
-            System.out.println("You have no accounts.\n");
-        }
+        if( myAccounts.isEmpty() ) System.out.println("You have no accounts.\n");
         else {
             //Print all approved accounts
             System.out.println("Approved accounts: ");
@@ -41,11 +46,7 @@ public abstract class User implements Serializable{
                 }
             }
 
-            System.out.println(approvedIndex);
-
-            if(approvedTotal == 0) {
-                System.out.println("There are no approved accounts");
-            }
+            if(approvedTotal == 0) System.out.println("There are no approved accounts");
 
             //Print pending accounts
             System.out.println("\nPending accounts: ");
@@ -58,13 +59,10 @@ public abstract class User implements Serializable{
                 }
             }
 
-            if(i == 0) {
-                System.out.println("There are no pending accounts");
-            }
+            if(i == 0) System.out.println("There are no pending accounts");
 
             System.out.print("\n");
         }
-
         return approvedIndex;
     }
 

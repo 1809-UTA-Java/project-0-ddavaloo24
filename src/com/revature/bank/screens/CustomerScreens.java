@@ -6,10 +6,14 @@ import com.revature.bank.dbs.FileIO;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Give the customer a main menu as well as an interface for 
+ * working with their approved accounts.
+ */
 public class CustomerScreens {
 
-    public static void CustomerMainMenu(Customer c) {
-        Scanner sc = new Scanner(System.in);
+    public static void CustomerMainMenu(Customer c, Scanner sc) {
+
         int opt;
         int type;
         System.out.println("\nLogin successful! Hello " + c.toString() + "!");
@@ -27,21 +31,25 @@ public class CustomerScreens {
                     try{
                         opt = Integer.parseInt(sc.nextLine());
                     } catch(NumberFormatException e) {
-                        System.out.println("\nYour chosen number must be either 1, 2, or 3");
+                        System.out.print("\nYour chosen number must be either 1, 2, or 3 \n" +
+                                "Choice: ");
                         continue;
                     }
     
                     if(opt < 4 && opt > 0) break;
-                    else System.out.println("\nYour chosen number must be either 1, 2, or 3");
+                    else {
+                        System.out.print("\nYour chosen number must be either 1, 2, or 3 \n" +
+                                "Choice: ");
+                    } 
     
                 } catch(InputMismatchException e) {
-                    System.out.println("\nYou must choose either 1, 2, or 3 as your options");
-                    sc.nextLine();
+                    System.out.print("\nYour chosen number must be either 1, 2, or 3 \n" +
+                                "Choice: ");
                 }
             } while( true );
 
             //To display all current open accounts and make account changes
-            if(opt == 1) CustomerScreens.CustomerAccountScreen(c);
+            if(opt == 1) CustomerScreens.CustomerAccountScreen(c, sc);
             //To apply for a joint or single account
             else if(opt == 2) {
                 System.out.print("\nWould you like to open a single or joint account? \n" +
@@ -49,23 +57,25 @@ public class CustomerScreens {
                             "2. Joint \n" + 
                             "Choice: ");
 
-                //if single account then currentUser.applyForAcc();
                 do {
                     try{
                         try{
                             type = Integer.parseInt(sc.nextLine());
                         } catch(NumberFormatException e) {
-                            System.out.println("\nYour chosen number must be either 1 or 2");
+                            System.out.print("\nYour chosen number must be either 1 or 2 \n" + 
+                                    "Choice: ");
                             continue;
                         }
         
                         if(type < 3 && type > 0) break;
-
-                        else System.out.println("\nYour chosen number must be either 1 or 2");
+                        else {
+                            System.out.print("\nYour chosen number must be either 1 or 2 \n" + 
+                                    "Choice: ");
+                        }
         
                     } catch(InputMismatchException e) {
-                        System.out.println("\nYou must choose either 1 or 2 as your options");
-                        sc.nextLine();
+                        System.out.print("\nYour chosen number must be either 1 or 2 \n" + 
+                                    "Choice: ");
                     }
                 } while( true );
             
@@ -78,10 +88,7 @@ public class CustomerScreens {
 
 
 
-
-
-
-
+                    //TODO: IMPLEMENT A WAY TO CREATE JOINT ACCOUNTS USING DBS
 
                 }
             }
@@ -93,7 +100,8 @@ public class CustomerScreens {
         } while(true);
     }
 
-    public static void CustomerAccountScreen(Customer c) {
+    public static void CustomerAccountScreen(Customer c, Scanner sc) {
+        
         System.out.print("\n");
         ArrayList<Integer> approvedIndex =  c.displayMyAccs();
         int totalAccs = approvedIndex.size();
@@ -101,7 +109,6 @@ public class CustomerScreens {
         int choiceTransfer;
         double amt;
         BankAccount currentAccount = null;
-        Scanner sc = new Scanner(System.in);
 
         if(totalAccs != 0) {
             //Ask the user here if they wanna look at an account or go back
@@ -112,16 +119,20 @@ public class CustomerScreens {
                     try{
                         choice = Integer.parseInt(sc.nextLine());
                     } catch(NumberFormatException e) {
-                        System.out.println("\nPlease choose from the above numbers");
+                        System.out.print("\nPlease choose from the above numbers \n" + 
+                                "Choice: ");
                         continue;
                     }
     
                     if((choice < (totalAccs + 2)) && choice > 0) break;
-                    else System.out.println("\nPlease choose from the above numbers");
+                    else {
+                        System.out.print("\nPlease choose from the above numbers \n" + 
+                                "Choice: ");
+                    }
     
                 } catch(InputMismatchException e) {
-                    System.out.println("\nPlease choose from the above numbers");
-                    sc.nextLine();
+                    System.out.print("\nPlease choose from the above numbers \n" + 
+                                "Choice: ");
                 }
             } while( true );
 
@@ -141,16 +152,20 @@ public class CustomerScreens {
                         try{
                             moneyMoves = Integer.parseInt(sc.nextLine());
                         } catch(NumberFormatException e) {
-                            System.out.println("\nPlease choose from the above numbers");
+                            System.out.print("\nPlease choose from the above numbers \n" + 
+                                "Choice: ");
                             continue;
                         }
         
                         if(moneyMoves < 5 && moneyMoves > 0) break;
-                        else System.out.println("\nPlease choose from the above numbers");
+                        else {
+                            System.out.print("\nPlease choose from the above numbers \n" + 
+                                "Choice: ");
+                        }
         
                     } catch(InputMismatchException e) {
-                        System.out.println("\nPlease choose from the above numbers");
-                        sc.nextLine();
+                        System.out.print("\nPlease choose from the above numbers \n" + 
+                        "Choice: ");
                     }
                 } while( true );
 
@@ -164,16 +179,20 @@ public class CustomerScreens {
                                 try{
                                     amt = Double.parseDouble(sc.nextLine());
                                 } catch(NumberFormatException e) {
-                                    System.out.println("\nPlease select a number");
+                                    System.out.print("\nPlease select a number \n" + 
+                                            "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
-                                else System.out.println("\nPlease select a number");
+                                else {
+                                    System.out.print("\nPlease select a number \n" + 
+                                            "Amount: ");
+                                }
                                 
                             } catch(InputMismatchException e) {
-                                System.out.println("\nPlease select a number");
-                                sc.nextLine();
+                                System.out.print("\nPlease select a number \n" + 
+                                            "Amount: ");
                             }
                         } while( true );
                         currentAccount.deposit(amt);
@@ -187,16 +206,20 @@ public class CustomerScreens {
                                 try{
                                     amt = Double.parseDouble(sc.nextLine());
                                 } catch(NumberFormatException e) {
-                                    System.out.println("\nPlease select a number");
+                                    System.out.print("\nPlease select a number \n" + 
+                                            "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
-                                else System.out.println("Please select a number");
+                                else {
+                                    System.out.print("\nPlease select a number \n" + 
+                                            "Amount: ");
+                                }
                 
                             } catch(InputMismatchException e) {
-                                System.out.println("Please select a number");
-                                sc.nextLine();
+                                System.out.print("\nPlease select a number \n" + 
+                                            "Amount: ");
                             }
                         } while( true );
                         currentAccount.withdraw(amt);
@@ -205,43 +228,52 @@ public class CustomerScreens {
                     case 3:
                         //Transfer money
                         if(totalAccs > 1) {
-                            System.out.println("\nWhich account would you like to transfer? Or press " + (totalAccs + 1) + " to go back");
+                            System.out.print("\nWhich account would you like to transfer? Or press " + (totalAccs + 1) + " to go back \n" + 
+                                        "Choice: ");
                             do {
                                 c.displayMyAccs();
                                 try{
                                     try{
                                         choiceTransfer = Integer.parseInt(sc.nextLine());
                                     } catch(NumberFormatException e) {
-                                        System.out.println("\nPlease choose from the above numbers");
+                                        System.out.print("\nPlease choose from the above numbers \n" + 
+                                                "Choice: ");
                                         continue;
                                     }
                     
                                     if((choiceTransfer < (totalAccs + 2)) && choiceTransfer > 0 && choice != choiceTransfer) break;
-                                    else System.out.println("\nPlease choose from the above numbers or a different account");
+                                    else {
+                                        System.out.print("\nPlease choose from the above numbers \n" + 
+                                                "Choice: ");
+                                    }
                     
                                 } catch(InputMismatchException e) {
-                                    System.out.println("\nPlease choose from the above numbers");
-                                    sc.nextLine();
+                                    System.out.print("\nPlease choose from the above numbers \n" + 
+                                                "Choice: ");
                                 }
                             } while( true );
 
-                            System.out.println("\nHow much would you like to transfer \n" + 
+                            System.out.print("\nHow much would you like to transfer \n" + 
                                     "Amount: ");
                             do {
                                 try{
                                     try{
                                         amt = Double.parseDouble(sc.nextLine());
                                     } catch(NumberFormatException e) {
-                                        System.out.println("\nPlease select a number");
+                                        System.out.print("\nPlease select a number \n" +
+                                                "Amount: ");
                                         continue;
                                     }
 
                                     if(amt > 0) break;
-                                    else System.out.println("\nPlease select a number");
+                                    else {
+                                        System.out.print("\nPlease select a number \n" +
+                                                "Amount: ");
+                                    }
 
                                 } catch(InputMismatchException e) {
-                                    System.out.println("\nPlease select a number");
-                                    sc.nextLine();
+                                    System.out.print("\nPlease select a number \n" +
+                                                "Amount: ");
                                 }
                             } while( true );
 

@@ -7,16 +7,17 @@ import com.revature.bank.dbs.FileIO;
 import java.io.*;
 import java.util.*;
 
-
+/**
+ * Create the default main menu for the bank admin as well as the account 
+ * manipulation interface for all customer accounts
+ */
 public class BankAdminScreens {
+
     public static ArrayList<Integer> canceledOnes = new ArrayList<>();
 
-    public static void BankAdminMainMenu(BankAdmin bAd) {
-        Scanner sc = new Scanner(System.in);
-        int opt;
-        int type;
-        
+    public static void BankAdminMainMenu(BankAdmin bAd, Scanner sc) {
 
+        int opt;
         System.out.println("\nLogin successful! Hello " + bAd.toString() + "!");
 
         do{
@@ -33,23 +34,27 @@ public class BankAdminScreens {
                     try{
                         opt = Integer.parseInt(sc.nextLine());
                     } catch(NumberFormatException e) {
-                        System.out.println("\nYour chosen number must be either 1, 2, 3, or 4");
+                        System.out.print("\nYour chosen number must be either 1, 2, 3, or 4 \n" +
+                                "Choice: ");
                         continue;
                     }
     
                     if(opt < 5 && opt > 0) break;
-                    else System.out.println("\nYour chosen number must be either 1, 2, 3, or 4");
+                    else {
+                        System.out.print("\nYour chosen number must be either 1, 2, 3, or 4 \n" +
+                                "Choice: ");
+                    }
     
                 } catch(InputMismatchException e) {
-                    System.out.println("\nYou must choose either 1, 2, 3, or 4 as your options");
-                    sc.nextLine();
+                    System.out.print("\nYour chosen number must be either 1, 2, 3, or 4 \n" +
+                                "Choice: ");
                 }
             } while( true );
 
             //To view all accounts and and move money around
-            if(opt == 1) BankAdminScreens.BankAdminAccountScreen(bAd);
-            else if(opt == 2) bAd.approveOrDeny();
-            else if(opt == 3) bAd.cancelBankAccount();
+            if(opt == 1) BankAdminScreens.BankAdminAccountScreen(bAd, sc);
+            else if(opt == 2) bAd.approveOrDeny(sc);
+            else if(opt == 3) bAd.cancelBankAccount(sc);
             else {
                 //logout and write bank account arraylist to a file
                 bAd.writeAccounts();
@@ -59,34 +64,39 @@ public class BankAdminScreens {
         } while(true);
     }
 
-    public static void BankAdminAccountScreen(BankAdmin bAd) {
+    //Page admin sees when it is trying to move money around
+    public static void BankAdminAccountScreen(BankAdmin bAd, Scanner sc) {
         System.out.print("\n");
         ArrayList<Integer> approvedIndex =  bAd.displayMyAccs();
         int totalAccs = approvedIndex.size();
         int choice = 0;
-        double amt;
-        int choiceTransfer;
+        double amt = 0;
+        int choiceTransfer = 0;
         boolean loopCheck = true;
         BankAccount currentAccount = null;
-        Scanner sc = new Scanner(System.in);
 
         if(totalAccs != 0) {
             //Ask the user here if they wanna look at an account or go back
-            System.out.println("\nWhich account would you like to access? Or press " + (totalAccs + 1) + " to go back");
+            System.out.print("\nWhich account would you like to access? Or press " + (totalAccs + 1) + " to go back \n" + 
+                        "Choice: ");
             do {
                 try{
                     try{
                         choice = Integer.parseInt(sc.nextLine());
                     } catch(NumberFormatException e) {
-                        System.out.println("\nPlease choose from the above numbers");
+                        System.out.print("\nPlease choose from the above numbers \n" +
+                                "Choice: ");
                         continue;
                     }
     
                     if((choice < (totalAccs + 2)) && choice > 0) break;
-                    else System.out.println("Please choose from the above numbers");
+                    else {
+                        System.out.print("\nPlease choose from the above numbers \n" +
+                                "Choice: ");
+                    }
                 } catch(InputMismatchException e) {
-                    System.out.println("Please choose from the above numbers");
-                    sc.nextLine();
+                    System.out.print("\nPlease choose from the above numbers \n" +
+                            "Choice: ");
                 }
             } while( loopCheck );
 
@@ -94,11 +104,12 @@ public class BankAdminScreens {
                 int arrIndex = approvedIndex.get(choice - 1);
 
                 currentAccount = bAd.getAccount(arrIndex);
-                System.out.println("What would you like to do with the accounts? \n" +
+                System.out.print("What would you like to do with the accounts? \n" +
                             "1. Deposit money \n" + 
                             "2. Withdraw money \n" +
                             "3. Transfer money between the accounts \n" +
-                            "4. Go to home screen");
+                            "4. Go to home screen \n " + 
+                            "Choice: ");
 
                 int moneyMoves;
                 do {
@@ -106,16 +117,20 @@ public class BankAdminScreens {
                         try{
                             moneyMoves = Integer.parseInt(sc.nextLine());
                         } catch(NumberFormatException e) {
-                            System.out.println("\nPlease choose from the above numbers");
+                            System.out.print("\nPlease choose from the above numbers \n" +
+                                "Choice: ");
                             continue;
                         }
         
                         if(moneyMoves < 5 && moneyMoves > 0) break;
-                        else System.out.println("Please choose from the above numbers");
+                        else {
+                            System.out.print("\nPlease choose from the above numbers \n" +
+                                "Choice: ");
+                        }
         
                     } catch(InputMismatchException e) {
-                        System.out.println("Please choose from the above numbers");
-                        sc.nextLine();
+                        System.out.print("\nPlease choose from the above numbers \n" +
+                                "Choice: ");
                     }
                 } while( true );
 
@@ -129,16 +144,20 @@ public class BankAdminScreens {
                                 try{
                                     amt = Double.parseDouble(sc.nextLine());
                                 } catch(NumberFormatException e) {
-                                    System.out.println("\nPlease select a number");
+                                    System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
-                                else System.out.println("Please select a number");
+                                else {
+                                    System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
+                                }
                 
                             } catch(InputMismatchException e) {
-                                System.out.println("Please select a number");
-                                sc.nextLine();
+                                System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
                             }
                         } while( true );
                         currentAccount.deposit(amt);
@@ -152,16 +171,20 @@ public class BankAdminScreens {
                                 try{
                                     amt = Double.parseDouble(sc.nextLine());
                                 } catch(NumberFormatException e) {
-                                    System.out.println("\nPlease select a number");
+                                    System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
-                                else System.out.println("Please select a number");
+                                else {
+                                    System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
+                                }
                 
                             } catch(InputMismatchException e) {
-                                System.out.println("Please select a number");
-                                sc.nextLine();
+                                System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
                             }
                         } while( true );
                         currentAccount.withdraw(amt);
@@ -169,24 +192,28 @@ public class BankAdminScreens {
                     case 3:
                         //Transfer money
                         if(totalAccs > 1) {
-                            System.out.println("\nWhich account would you like to transfer money from? Or press " + 
-                                (totalAccs + 1) + " to go back");
+                            System.out.print("\nWhich account would you like to transfer money from? Or press " + 
+                                (totalAccs + 1) + " to go back \n" +
+                                "Choice: ");
                             do {
                                 bAd.displayMyAccs();
                                 try{
                                     try{
                                         choiceTransfer = Integer.parseInt(sc.nextLine());
                                     } catch(NumberFormatException e) {
-                                        System.out.println("\nPlease choose from the above numbers");
-                                        continue;
+                                        System.out.print("\nPlease choose from the above numbers \n" +
+                                                "Choice: ");
                                     }
                     
                                     if((choiceTransfer < (totalAccs + 2)) && choiceTransfer > 0 && choice != choiceTransfer) break;
-                                    else System.out.println("Please choose from the above numbers or a different account");
+                                    else {
+                                        System.out.print("\nPlease choose from the above numbers \n" +
+                                                "Choice: ");
+                                    }
                     
                                 } catch(InputMismatchException e) {
-                                    System.out.println("Please choose from the above numbers");
-                                    sc.nextLine();
+                                    System.out.print("\nPlease choose from the above numbers \n" +
+                                                "Choice: ");
                                 }
                             } while( true );
 
@@ -197,16 +224,20 @@ public class BankAdminScreens {
                                     try{
                                         amt = Double.parseDouble(sc.nextLine());
                                     } catch(NumberFormatException e) {
-                                        System.out.println("\nPlease select a number");
+                                        System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
                                         continue;
                                     }
                                     
                                     if(amt > 0) break;
-                                    else System.out.println("Please select a number");
+                                    else {
+                                        System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
+                                    }
 
                                 } catch(InputMismatchException e) {
-                                    System.out.println("Please select a number");
-                                    sc.nextLine();
+                                    System.out.println("\nPlease select a number \n" +
+                                            "Amount: ");
                                 }
                             } while( true );
 

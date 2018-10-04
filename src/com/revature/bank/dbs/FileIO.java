@@ -7,10 +7,17 @@ import java.io.*;
 import java.io.IOException;
 import java.util.Scanner;
 
+
+/**
+ * 
+ * This class is a helper class that allows objects and strings to be read from
+ * and written to memory using both FileWriters and serializers
+ */
 public class FileIO {
 
     public static String pathway = "/home/developer/Workspace/project-0-ddavaloo24/src/com/revature/bank/dbs/";
 
+    //Write user information to the different files used for logging in
     public static void write(String fileName, String pattern) {
 
         String fullFileName = pathway + fileName;
@@ -22,6 +29,7 @@ public class FileIO {
         }
     }
 
+    //Checks whether the given username and pattern matches the database for possible matches
     public static boolean lookupLogin(String fileName, String pattern) {
 
         String str = null;
@@ -46,6 +54,8 @@ public class FileIO {
     }
 
 
+    //Method to read objects of any type from a file load the object
+    @SuppressWarnings("unchecked")
     public static <T> T deSerialize(String fileName, Class<T> type) {
 
         String fullFileName = pathway + fileName;
@@ -70,7 +80,7 @@ public class FileIO {
         return null;
     }
     
-
+    //Method to write an object to file using File and Object outputstreams
 	public static void serialize(String fileName, Object obj) {
 
         String fullFileName = pathway + fileName;

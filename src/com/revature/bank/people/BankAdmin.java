@@ -12,6 +12,12 @@ import com.revature.bank.accounts.BankAccount;
 import com.revature.bank.people.*;
 import com.revature.bank.screens.BankAdminScreens;
 
+/**
+ * 
+ * Creates the bank admin user. They have the ability to view all
+ * accounts as well as the ability to approve or deny new accounts
+ * and to cancel existing ones.
+ */
 public class BankAdmin extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,22 +30,20 @@ public class BankAdmin extends User implements Serializable {
         this.bankAdminID = "b" + ( int )( Math.random() * 9999999 ) + 1;
     }
 
+    //Clone constructor
     public BankAdmin( BankAdmin ba ) {
 
         super( ba.username, ba.password, ba.firstName, ba.lastName);
         this.bankAdminID = "b" + ( int )( Math.random() * 9999999 ) + 1;
     }
 
-    public String getBankAdminID() {
-        return bankAdminID;
-    }
+    //Cancels the bank account and sets the position in the myAccounts arraylist to null
+    public void cancelBankAccount(Scanner sc) {
 
-    public void cancelBankAccount() {
         int choice = 0;
         boolean arrIndex = true;
         ArrayList<Integer> approvedIndex =  this.displayMyAccs();
         int totalAccs = approvedIndex.size();
-        Scanner sc = new Scanner(System.in);
 
         if(totalAccs != 0) {
             //Ask which account they want to cancel
@@ -54,33 +58,26 @@ public class BankAdmin extends User implements Serializable {
                     }
     
                     if((choice < (totalAccs + 2)) && choice > 0) {
-                        if(BankAdminScreens.canceledOnes.size() == 0) {
-                            break;
-                        }
 
+                        if(BankAdminScreens.canceledOnes.size() == 0) break;
                         for(int i = 0; i < BankAdminScreens.canceledOnes.size(); i++) {
-                            if(choice != BankAdminScreens.canceledOnes.get(i)) {
-                                arrIndex = false;
-                            }
+
+                            if(choice != BankAdminScreens.canceledOnes.get(i)) arrIndex = false;
                             else {
                                 arrIndex = true;
                                 break;
                             }
                         }
 
-                        if(arrIndex == true) {
-                            System.out.println("That account was already canceled. Please try a different number");
-                        }
+                        if(arrIndex == true) System.out.println("That account was already canceled. Please try a different number");
                     }
-                    else {
-                        System.out.println("Please choose from the above numbers");
-                    } 
+                    else System.out.println("Please choose from the above numbers");
     
                 } catch(InputMismatchException e) {
                     System.out.println("Please choose from the above numbers");
                     sc.nextLine();
                 }
-            } while( arrIndex );
+            } while(arrIndex);
 
             if(choice == (totalAccs + 1)) return;
             else {
@@ -95,10 +92,9 @@ public class BankAdmin extends User implements Serializable {
         }
     }
 
-    public void approveOrDeny() {
-        Scanner sc = new Scanner(System.in);
+    //Lets the admin go through each pending account one by one and make a choice
+    public void approveOrDeny(Scanner sc) {
         String choice;
-        boolean check;
 
         if(myAccounts.isEmpty()) {
             System.out.println("\nThere are no pending accounts");
@@ -118,39 +114,28 @@ public class BankAdmin extends User implements Serializable {
                     else System.out.println("Sorry! I didn't get that! Please choose approve or deny");
                 } while(true);
         
-                do {
-                    if(choice.equals("approve")) {
-                        //Approve the account
-                        bA.setStatus(true);
-                        System.out.println("\nApproved!\n");
-                        check = false;
-                    }
-                    else if(choice.equals("deny")) {
-                        //Deny the account
+                if(choice.equals("approve")) {
+                    //Approve the account
+                    bA.setStatus(true);
+                    System.out.println("\nApproved!\n");
+                }
+                else if(choice.equals("deny")) {
+                    //Deny the account
+                    String iD = bA.getBankID();
+                    int index = myAccounts.indexOf(bA);
 
-                        String iD = bA.getBankID();
-                        int index = myAccounts.indexOf(bA);
-
-                        myAccounts.set(index, null);
-                        BankAdminScreens.canceledOnes.add(index + 1);
-
-                        System.out.println("\nDeny complete! Account " + iD + " has been removed\n");
-
-                        check = false;
-                    }
-                    else {
-                        //If the user enters anything other than a yes or no
-                        System.out.println("Please write approve or deny");
-                        choice = sc.nextLine().toLowerCase();
-                        check = true;   
-                    }
-                } while(check);
+                    myAccounts.set(index, null);
+                    BankAdminScreens.canceledOnes.add(index + 1);
+                    System.out.println("\nDeny complete! Account " + iD + " has been removed\n");
+                }
             }
         }
         this.writeAccounts();
         this.loadAccounts();
     }
 
+    //Load up all created bank accounts into the admin's account arraylist
+    @SuppressWarnings("unchecked")
     public void loadAccounts() {
         File dir = new File(FileIO.pathway);
         File[] files = dir.listFiles((dir1, name) -> name.endsWith("bank"));
@@ -166,6 +151,8 @@ public class BankAdmin extends User implements Serializable {
         }
     }
 
+    //Writes all accounts to a file and empties the admin's arraylist
+    @SuppressWarnings("unchecked")
     public void writeAccounts() {
         File dir = new File(FileIO.pathway);
         File[] files = dir.listFiles((dir1, name) -> name.endsWith("bank"));
@@ -178,7 +165,6 @@ public class BankAdmin extends User implements Serializable {
                 accountIDs = f.getName();
                 temp = (FileIO.deSerialize(accountIDs, ArrayList.class));
 
-
                 for(int j = 0; j < temp.size(); j++) {
                     temp.set(j, myAccounts.get(i));
                     myAccounts.remove(i);
@@ -188,15 +174,17 @@ public class BankAdmin extends User implements Serializable {
                     if(temp.get(j) == null) temp.remove(j);
                 }
                 
-
                 f.delete();
                 FileIO.serialize(accountIDs, temp); 
             }
         }
     }
 
+    public String getBankAdminID() {
+        return bankAdminID;
+    }
+
     public String applyForAcc() {
         return null;
     }
-
 }

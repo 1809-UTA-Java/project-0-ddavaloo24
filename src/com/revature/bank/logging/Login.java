@@ -4,30 +4,38 @@ import java.io.Console;
 import java.io.FileReader;
 import java.util.*;
 import java.io.*;
+
 import com.revature.bank.accounts.*;
 import com.revature.bank.people.*;
 import com.revature.bank.dbs.*;
 
-
+/**
+ * 
+ * A helper class used to login the user depending of which type of account
+ * they want to access. Also uses the LoginValidator to provide further checks
+ */
 public class Login {
 
-    protected Customer currentCustomer = null;
-    protected Employee currentEmployee = null;
-    protected BankAdmin currentBankAdmin = null;
+    //Used to store the account loaded up once a user has logged in
+    private Customer currentCustomer = null;
+    private Employee currentEmployee = null;
+    private BankAdmin currentBankAdmin = null;
 
+    //Pathway to which all login files are stored
     private String pathway = "/home/developer/Workspace/project-0-ddavaloo24/src/com/revature/bank/dbs/";
 
-    protected String username;
-    protected String password;
-    protected String firstName;
-    protected String lastName;
-    protected int type;
+    //Holder variables
+    private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private int type;
 
     //Used for checking account creation checks
-    protected boolean checker;
+    private boolean checker;
 
-    public void createAccount() {
-        Scanner sc = new Scanner( System.in );
+    //Used to create an account for the user depending of which kind they want
+    public void createAccount(Scanner sc) {
 
         do {
             System.out.print("\nWhat kind of account would you like to make? \n" +
@@ -44,12 +52,9 @@ public class Login {
                     continue;
                 }
 
-                if(type < 4 && type > 0) {
-                    break;
-                }
-                else {
-                    System.out.println("\nYour chosen number must be either 1, 2, or 3");
-                }
+                if(type < 4 && type > 0) break;
+                else System.out.println("\nYour chosen number must be either 1, 2, or 3");
+
             } catch(InputMismatchException e) {
                 System.out.println("\nYou must choose either 1, 2, or 3 as your options");
                 sc.nextLine();
@@ -101,6 +106,7 @@ public class Login {
         //Write the pattern of personal information to a central database of user accounts
         FileIO.write("AllUserAccounts", pattern);
 
+        //Create the account and persist it in a file
         switch(type) {
             case 1:
             //Create a new customer and add to a doc that holds the username and customerID
@@ -130,12 +136,12 @@ public class Login {
             System.out.println("Invalid person");
         }
 
-        System.out.println("Congrats on your new account! Please log in");
+        System.out.println("Account created! Congrats!");
     }
 
-    public Customer loginCustomer() {
+    //Login function specifically for the customer
+    public Customer loginCustomer(Scanner sc) {
 
-        Scanner sc1 = new Scanner(System.in);
         boolean lookupStatus;
         String accessor;
         String fileName;
@@ -145,22 +151,21 @@ public class Login {
         do {
             System.out.println("\nPlease enter you username and password");
             System.out.print("Username: ");
-            username = sc1.nextLine();
+            username = sc.nextLine();
             System.out.print("Password: ");
-            password = sc1.nextLine();
+            password = sc.nextLine();
             String pattern = username + "_" + password + "_";
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
 
                 fileName = null;
-                try(Scanner sc = new Scanner(file)) {
-                    while(sc.hasNextLine()) {
+                try(Scanner sc1 = new Scanner(file)) {
+                    while(sc1.hasNextLine()) {
 
-                        accessor = sc.nextLine();
+                        accessor = sc1.nextLine();
                         if(accessor.equals(username)) {
-
-                            fileName = sc.nextLine();
+                            fileName = sc1.nextLine();
                             break;
                         }
                     }
@@ -169,9 +174,7 @@ public class Login {
                     continue;
                 }
 
-                if(fileName == null) {
-                    return null;
-                }
+                if(fileName == null) return null;
 
                 currentCustomer = FileIO.deSerialize(fileName, Customer.class);
                 currentCustomer.loadAccounts();
@@ -183,38 +186,36 @@ public class Login {
             }
         } while(currentCustomer == null);
 
-        sc1.close();
         return null;
     }
 
-    public Employee loginEmployee() {
-        Scanner sc1 = new Scanner(System.in);
+    public Employee loginEmployee(Scanner sc) {
+
         boolean lookupStatus;
         String accessor;
         String fileName;
-
         String fullFile = pathway + "AllEmployees";
         File file = new File(fullFile);
 
         do {
             System.out.println("\nPlease enter you username and password");
             System.out.print("Username: ");
-            username = sc1.nextLine();
+            username = sc.nextLine();
             System.out.print("Password: ");
-            password = sc1.nextLine();
+            password = sc.nextLine();
             String pattern = username + "_" + password + "_";
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
 
                 fileName = null;
-                try(Scanner sc = new Scanner(file)) {
-                    while(sc.hasNextLine()) {
+                try(Scanner sc1 = new Scanner(file)) {
+                    while(sc1.hasNextLine()) {
 
-                        accessor = sc.nextLine();
+                        accessor = sc1.nextLine();
                         if(accessor.equals(username)) {
 
-                            fileName = sc.nextLine();
+                            fileName = sc1.nextLine();
                             break;
                         }
                     }
@@ -235,14 +236,11 @@ public class Login {
             }
         } while(currentEmployee == null);
 
-
-
-        sc1.close();
         return null;
     }
 
-    public BankAdmin loginBankAdmin() {
-        Scanner sc1 = new Scanner(System.in);
+    public BankAdmin loginBankAdmin(Scanner sc) {
+
         boolean lookupStatus;
         String accessor;
         String fileName;
@@ -252,21 +250,21 @@ public class Login {
         do {
             System.out.println("\nPlease enter you username and password");
             System.out.print("Username: ");
-            username = sc1.nextLine();
+            username = sc.nextLine();
             System.out.print("Password: ");
-            password = sc1.nextLine();
+            password = sc.nextLine();
             String pattern = username + "_" + password + "_";
 
             lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
             if(lookupStatus) {
 
                 fileName = null;
-                try(Scanner sc = new Scanner(file)) {
-                    while(sc.hasNextLine()) {
-                        accessor = sc.nextLine();
+                try(Scanner sc1 = new Scanner(file)) {
+                    while(sc1.hasNextLine()) {
 
+                        accessor = sc1.nextLine();
                         if(accessor.equals(username)) {
-                            fileName = sc.nextLine();
+                            fileName = sc1.nextLine();
                             break;
                         }
                     }
@@ -287,7 +285,6 @@ public class Login {
             }
         } while(currentBankAdmin == null);
 
-        sc1.close();
         return null;
     }
 }

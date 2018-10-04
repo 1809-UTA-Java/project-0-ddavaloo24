@@ -3,23 +3,22 @@ package com.revature.bank.accounts;
 import java.io.Serializable;
 import java.lang.Math;
 
+/**
+ * 
+ * This class is used to create a bank account as well as 
+ * move money into, from, and to other accounts
+ */
 public class BankAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String accID;
-    private String username;
-    private String firstName;
-    private String lastName;
     private double balance;
 
     //Default for all new accounts
     private boolean approved = false;
 
     //The default constructor setting all the fields
-    public BankAccount( String username, String firstName, String lastName, double balance) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public BankAccount(String lastName, double balance) {
         this.balance = balance;
         this.accID = lastName + ( int )( Math.random() * 9999 ) + 1;
     }
@@ -28,9 +27,7 @@ public class BankAccount implements Serializable {
 
     //Method for customer to remove money from account
     public void withdraw( double amt ) {
-        if((balance - amt) < 0) {
-            System.out.println("\nSorry but you cannot withdraw more than the amount in your account!");
-        }
+        if((balance - amt) < 0) System.out.println("\nSorry but you cannot withdraw more than the amount in your account!");
         else {
             balance = balance - amt;
             System.out.println("\nWithdraw Successful! Your new balance is $" + balance);
@@ -65,10 +62,13 @@ public class BankAccount implements Serializable {
         return accID;
     }
 
+    //Method to return the approved status of the account
     public boolean getStatus() {
         return approved;
     }
 
+    
+    //Method to set the approved status of the account
     public void setStatus(boolean status) {
         approved = status;
     }
