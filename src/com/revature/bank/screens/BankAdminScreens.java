@@ -104,7 +104,7 @@ public class BankAdminScreens {
                 int arrIndex = approvedIndex.get(choice - 1);
 
                 currentAccount = bAd.getAccount(arrIndex);
-                System.out.print("What would you like to do with the accounts? \n" +
+                System.out.print("\nWhat would you like to do with the account? \n" +
                             "1. Deposit money \n" + 
                             "2. Withdraw money \n" +
                             "3. Transfer money between the accounts \n" +
