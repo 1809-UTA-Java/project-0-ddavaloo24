@@ -1,6 +1,13 @@
 package com.revature.bank.logging;
 
-import com.revature.bank.dbs.FileIO;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.revature.bank.util.ConnectionUtil;
+import com.revature.bank.util.SuperDao;
 
 class LoginValidator {
 
@@ -51,14 +58,9 @@ class LoginValidator {
         }
 
         //Check if the username is unique
-        if( FileIO.lookupLogin("AllCustomers", creds) ) {
-            if( FileIO.lookupLogin("AllEmployees", creds) ) {
-                if( FileIO.lookupLogin("AllAdmins", creds) ) {
-                    System.out.println("Your username already exists. Please try a new one.");
-                    return true;
-                }
-            }
-        }
+        boolean unique =  SuperDao.checkUsernameUnique(creds);
+        if(unique) return true;
+
 
         return false;
     }

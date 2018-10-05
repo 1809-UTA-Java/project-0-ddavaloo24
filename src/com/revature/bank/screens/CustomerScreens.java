@@ -1,6 +1,7 @@
 package com.revature.bank.screens;
 
 import com.revature.bank.people.Customer;
+import com.revature.bank.util.SuperDao;
 import com.revature.bank.accounts.BankAccount;
 import com.revature.bank.dbs.FileIO;
 import java.io.*;
@@ -85,11 +86,17 @@ public class CustomerScreens {
                     continue;
                 }
                 else {
+                    System.out.print("\nPlease provide the customer id of the second applier exactly as it appears. \n" + 
+                                "Choice: ");
+                    
+                    String secondPerson = sc.nextLine();
+                    boolean valid = SuperDao.jointAccountCheck(secondPerson);
 
-
-
-                    //TODO: IMPLEMENT A WAY TO CREATE JOINT ACCOUNTS USING DBS
-
+                    if(valid) {
+                        String accountID = c.applyForJointAcc(secondPerson);
+                        System.out.println("\nYou have created a new account! Its ID is " + accountID);
+                        continue;
+                    }
                 }
             }
             else {

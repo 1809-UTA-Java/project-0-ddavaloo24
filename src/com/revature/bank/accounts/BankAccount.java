@@ -23,7 +23,10 @@ public class BankAccount implements Serializable {
         this.accID = lastName + ( int )( Math.random() * 9999 ) + 1;
     }
 
-    
+    public BankAccount(double balance, String accID) {
+        this.balance = balance;
+        this.accID = accID;
+    }
 
     //Method for customer to remove money from account
     public void withdraw( double amt ) {
@@ -52,6 +55,7 @@ public class BankAccount implements Serializable {
                 " and " + target.getBankID() + " has a balance of " + target.balance);
     }
 
+    
     //Overriden to print the account number and corresponding balance
     public String toString() {
         return (accID + " has a balance of $" + balance);
@@ -67,7 +71,10 @@ public class BankAccount implements Serializable {
         return approved;
     }
 
-    
+    public double getBalance() {
+        return balance;
+    }
+
     //Method to set the approved status of the account
     public void setStatus(boolean status) {
         approved = status;

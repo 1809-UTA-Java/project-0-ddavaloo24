@@ -21,19 +21,28 @@ public class Employee extends User implements Serializable {
     private static final long serialVersionUID = 1L;
     private String employeeID;
 
+
+
     //Default constructor that initializes string values and uses the super constructor
     public Employee( String username, String password, String firstName, String lastName ) {
         
-        super( username, password, firstName, lastName);
+        super(username, password, firstName, lastName);
         this.employeeID = "e" + ( int )( Math.random() * 9999999 ) + 1;
     }
 
     //Copy constructor
     public Employee( Employee e ) {
 
-        super( e.username, e.password, e.firstName, e.lastName);
+        super(e.username, e.password, e.firstName, e.lastName);
         this.employeeID = "e" + ( int )( Math.random() * 9999999 ) + 1;
     }
+
+    public Employee(String username, String password, String firstName, String lastName, String accID) {
+        super(username, password, firstName, lastName);
+        this.employeeID = accID;
+    }
+
+    
 
     //Load all customer accounts and place them within the employee's arraylist
     @SuppressWarnings("unchecked")

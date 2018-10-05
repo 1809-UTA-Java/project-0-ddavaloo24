@@ -27,6 +27,7 @@ public class LoginScreen {
         do {
             //Creates a default login screen and makes sure user enters yes or no
             do {           
+                
                 System.out.print("\nWould you like to login or signup or exit? \n" +
                         "Choice: ");
                 answer = sc.nextLine().toLowerCase().trim();
@@ -34,6 +35,7 @@ public class LoginScreen {
                 if(answer.equals("login") || answer.equals("signup")) break;
                 else if(answer.equals("exit")) return;
                 else System.out.println("Sorry! I didn't get that! Please try again\n");
+
             } while(true);
 
             if(answer.equals("signup")) {

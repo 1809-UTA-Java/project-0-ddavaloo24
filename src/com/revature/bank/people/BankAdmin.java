@@ -23,6 +23,8 @@ public class BankAdmin extends User implements Serializable {
     private static final long serialVersionUID = 1L;
     private String bankAdminID;
 
+
+    
     //Default constructor that initializes string values and sets all bools to false
     public BankAdmin( String username, String password, String firstName, String lastName ) {
         
@@ -36,6 +38,13 @@ public class BankAdmin extends User implements Serializable {
         super( ba.username, ba.password, ba.firstName, ba.lastName);
         this.bankAdminID = "b" + ( int )( Math.random() * 9999999 ) + 1;
     }
+
+    public BankAdmin(String username, String password, String firstName, String lastName, String accID) {
+        super(username, password, firstName, lastName);
+        this.bankAdminID = accID;
+    }
+
+
 
     //Cancels the bank account and sets the position in the myAccounts arraylist to null
     public void cancelBankAccount(Scanner sc) {
