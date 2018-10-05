@@ -15,18 +15,24 @@ public class BankAccount implements Serializable {
     private double balance;
 
     //Default for all new accounts
-    private boolean approved = false;
+    private boolean approved;
+
 
     //The default constructor setting all the fields
-    public BankAccount(String lastName, double balance) {
+    public BankAccount(String lastName, double balance, boolean approved) {
         this.balance = balance;
         this.accID = lastName + ( int )( Math.random() * 9999 ) + 1;
+        this.approved = approved;
     }
 
-    public BankAccount(double balance, String accID) {
+    public BankAccount(double balance, String accID, boolean approved) {
         this.balance = balance;
         this.accID = accID;
+        this.approved = approved;
     }
+
+
+
 
     //Method for customer to remove money from account
     public void withdraw( double amt ) {
@@ -51,11 +57,11 @@ public class BankAccount implements Serializable {
         }
         balance = balance - amt;
         target.balance = target.balance + amt;
-        System.out.println("\nTransfer Complete! " + getBankID() + " has a balance of " + balance + 
-                " and " + target.getBankID() + " has a balance of " + target.balance);
+        System.out.println("\nTransfer Complete! " + getBankID() + " has a balance of $" + balance + 
+                " and " + target.getBankID() + " has a balance of $" + target.balance);
     }
 
-    
+
     //Overriden to print the account number and corresponding balance
     public String toString() {
         return (accID + " has a balance of $" + balance);

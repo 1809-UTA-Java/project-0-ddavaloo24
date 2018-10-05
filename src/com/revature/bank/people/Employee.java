@@ -2,12 +2,19 @@ package com.revature.bank.people;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import com.revature.bank.screens.BankAdminScreens;
+import com.revature.bank.util.ConnectionUtil;
 import com.revature.bank.dbs.FileIO;
 import com.revature.bank.accounts.BankAccount;
 import com.revature.bank.people.*;
@@ -45,101 +52,155 @@ public class Employee extends User implements Serializable {
     
 
     //Load all customer accounts and place them within the employee's arraylist
-    @SuppressWarnings("unchecked")
     public void loadAccounts() {
-        File dir = new File(FileIO.pathway);
-        File[] files = dir.listFiles((dir1, name) -> name.endsWith("bank"));
-        ArrayList<BankAccount> temp = new ArrayList<>();
-        String accountIDs;
+        PreparedStatement ps = null;
 
-        if(files.length != 0) {
-            for(File f:files) {
-                accountIDs = f.getName();
-                temp = (FileIO.deSerialize(accountIDs, ArrayList.class));
-                myAccounts.addAll(temp);
+        try(Connection conn = ConnectionUtil.getConnection()) {
+            
+            String sql = "SELECT * FROM BANKACCOUNTS";
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                if( rs.getString("APPROVED").equals("n")) {
+                    BankAccount loader = new BankAccount(rs.getDouble("BALANCE"), rs.getString("B_ID"), false);
+                    myAccounts.add(loader);
+                }
+                else {
+                    BankAccount loader = new BankAccount(rs.getDouble("BALANCE"), rs.getString("B_ID"), true);
+                    myAccounts.add(loader);
+                }
             }
+
+            rs.close();
+            ps.close();
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
     //Search through customer acounts and view their personal and account information
-    @SuppressWarnings("unchecked")
     public void findAllCustomerAccs(Scanner sc) {
-        ArrayList<BankAccount> temp = new ArrayList<>();
-        String accountIDs;
-        File dir = new File(FileIO.pathway);
-        File[] files = dir.listFiles((dir1, name) -> name.startsWith("c") && !name.endsWith("bank"));
+
+        ArrayList<String> allCustAccounts = new ArrayList<>();
+        PreparedStatement ps = null;
         int choice;
 
-        if(files.length == 0) {
-            System.out.println("\nThere are no customer accounts");
-            return;
-        }
+        try(Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT C_ID FROM CUSTOMERS";
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
 
-        System.out.println("\nWhich account would you like to see? Or press " + (files.length + 1) + " to go back.");
-        for(int i = 0; i < files.length; i++) {
-            System.out.println((i+1) + ". " + files[i].getName());
-        }
-        System.out.print("Choice: ");
+            while(rs.next()) {
+                allCustAccounts.add(rs.getString("C_ID"));
+            }
 
-        do {
-            try{
+            if(allCustAccounts.isEmpty()) {
+                System.out.println("\nThere are no customer accounts");
+                return;
+            }
+
+            System.out.println("\nWhich account would you like to see? Or press " + (allCustAccounts.size() + 1) + " to go back.");
+            for(int i = 0; i < allCustAccounts.size(); i++) {
+                System.out.println((i+1) + ". " + allCustAccounts.get(i));
+            }
+            System.out.print("Choice: ");
+
+            do {
                 try{
-                    choice = Integer.parseInt(sc.nextLine());
-                } catch(NumberFormatException e) {
-                    System.out.println("\nPlease choose from the above numbers");
-                    continue;
+                    try{
+                        choice = Integer.parseInt(sc.nextLine());
+                    } catch(NumberFormatException e) {
+                        System.out.println("\nPlease choose from the above numbers");
+                        continue;
+                    }
+
+                    if((choice < allCustAccounts.size() + 2) && choice > 0) break;
+                    else System.out.println("Please choose from the above numbers");
+
+                } catch(InputMismatchException e) {
+                    System.out.println("Please choose from the above numbers");
+                    sc.nextLine();
                 }
+            } while( true );
 
-                if((choice < files.length + 2) && choice > 0) break;
-                else System.out.println("Please choose from the above numbers");
+            choice = choice - 1;
 
-            } catch(InputMismatchException e) {
-                System.out.println("Please choose from the above numbers");
-                sc.nextLine();
+            sql = "SELECT * FROM CUSTOMERS WHERE C_ID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, allCustAccounts.get(choice));
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                System.out.println("\n" + rs.getString("C_ID") + "'s account information: \n" +
+                    "Username: " + rs.getString("C_USERNAME") + "\n" +
+                    "First name: " + rs.getString("C_FNAME") + "\n" +
+                    "Last Name: " + rs.getString("C_LNAME"));
             }
-        } while( true );
 
-        choice = choice - 1;
-        FileIO.deSerialize(files[choice].getName(), Customer.class).printMyInfo();
-        
-        File chosenAccount = new File(files[choice].getName() + "bank");
-        accountIDs = chosenAccount.getName();
+            myAccounts.clear();
 
-        //Clear the accounts to be able to list the customer's account information
-        myAccounts.clear();
+            sql = "SELECT bankaccounts.B_ID, BALANCE, APPROVED " +
+                "FROM customers, customerbankconn, bankaccounts " +
+                "WHERE customers.c_id = customerbankconn.c_id " +
+                "AND bankaccounts.b_id = customerbankconn.b_id " +
+                "AND customers.c_id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, allCustAccounts.get(choice));
+            rs = ps.executeQuery();
 
-        temp = (FileIO.deSerialize(accountIDs, ArrayList.class));
-        myAccounts.addAll(temp);
-
-        System.out.println("\nApproved Accounts:");
-        int i = 0;
-        for(BankAccount bA : myAccounts) {
-            if(bA.getStatus()) {
-                i++;
-                System.out.println(bA.toString());
+            while(rs.next()) {
+                if( rs.getString("APPROVED").equals("n")) {
+                    BankAccount loader = new BankAccount(rs.getDouble("BALANCE"), rs.getString("B_ID"), false);
+                    myAccounts.add(loader);
+                }
+                else {
+                    BankAccount loader = new BankAccount(rs.getDouble("BALANCE"), rs.getString("B_ID"), true);
+                    myAccounts.add(loader);
+                }
             }
+
+            System.out.println("\nApproved Accounts:");
+            int i = 0;
+            for(BankAccount bA : myAccounts) {
+                if(bA.getStatus()) {
+                    i++;
+                    System.out.println(bA.toString());
+                }
+            }
+            if(i == 0) System.out.println("None");
+
+            System.out.println("\nPending Accounts");
+            i = 0;
+            for(BankAccount bA : myAccounts) {
+                if(bA.getStatus() == false) {
+                    i++;
+                    System.out.println(bA.toString());
+                }
+            }
+            if(i == 0) System.out.println("None");
+
+            myAccounts.clear();
+            this.loadAccounts();
+
+            rs.close();
+            ps.close();
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
-
-        if(i == 0) System.out.println("None");
-
-        System.out.println("\nPending Accounts");
-        i = 0;
-        for(BankAccount bA : myAccounts) {
-            if(bA.getStatus() == false) {
-                i++;
-                System.out.println(bA.toString());
-            }
-        }
-
-        if(i == 0) System.out.println("None");
-
-        myAccounts.clear();
-        this.loadAccounts();
     }
 
     //Approve or deny the pending accounts of customers
     public void approveOrDeny(Scanner sc) {
         String choice;
+        PreparedStatement ps = null;
+        String sql = null;
 
         if(myAccounts.isEmpty()) {
             System.out.println("\nThere are no pending accounts");
@@ -161,50 +222,85 @@ public class Employee extends User implements Serializable {
                 if(choice.equals("approve")) {
                     //Approve the account
                     bA.setStatus(true);
+
+                    try(Connection conn = ConnectionUtil.getConnection()) {
+                        sql = "UPDATE BANKACCOUNTS SET APPROVED = 'y' WHERE B_ID = ?";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, bA.getBankID());
+                        ps.execute();
+
+                        ps.close();
+                    } catch(SQLException e) {
+                        e.printStackTrace();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    } 
+
                     System.out.println("\nApproved!");
                 }
                 else if(choice.equals("deny")) {
+                    
                     //Deny the account
-                    String iD = bA.getBankID();
-                    int index = myAccounts.indexOf(bA);
+                    try(Connection conn = ConnectionUtil.getConnection()) {
 
-                    myAccounts.set(index, null);
-                    BankAdminScreens.canceledOnes.add(index + 1);
-                    System.out.println("\nDeny complete! Account " + iD + " has been removed");
+                        sql = "DELETE FROM CUSTOMERBANKCONN WHERE B_ID = ?";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, bA.getBankID());
+                        ps.execute();
+              
+                        sql = "DELETE FROM BANKACCOUNTS WHERE B_ID = ?";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, bA.getBankID());
+                        ps.execute();
+
+                        myAccounts.set(myAccounts.indexOf(bA), null);
+
+                        System.out.println("\nDeny complete! Account " + bA.getBankID() + " has been removed");
+            
+                        ps.close();
+                    } catch(SQLException e) {
+                        e.printStackTrace();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }   
                 }
             }
         }
-        this.writeAccounts();
-        this.loadAccounts();
+
+        Iterator<BankAccount> accIt = myAccounts.iterator();
+        while(accIt.hasNext()) {
+            if(accIt.next() == null) accIt.remove();
+        }
     }
 
     //Write all accounts in this arraylist to the separate accounts it got them from
-    @SuppressWarnings("unchecked")
     public void writeAccounts() {
-        File dir = new File(FileIO.pathway);
-        File[] files = dir.listFiles((dir1, name) -> name.endsWith("bank"));
-        ArrayList<BankAccount> temp = new ArrayList<>();
-        String accountIDs;
-        int i = 0;
 
-        if(files.length != 0) {
-            for(File f:files) {
-                accountIDs = f.getName();
-                temp = (FileIO.deSerialize(accountIDs, ArrayList.class));
+        PreparedStatement ps = null;
+        String sql = null;
 
-                for(int j = 0; j < temp.size(); j++) {
-                    temp.set(j, myAccounts.get(i));
-                    myAccounts.remove(i);
-                }
+        try(Connection conn = ConnectionUtil.getConnection()) {
+  
+            for(BankAccount bankAcc : myAccounts) {
+                sql = "UPDATE BANKACCOUNTS SET BALANCE=?, APPROVED=? WHERE B_ID=?";
+                ps = conn.prepareStatement(sql);
 
-                for(int j = 0; j < temp.size(); j++) {
-                    if(temp.get(j) == null) temp.remove(j);
-                }
+                ps.setDouble(1, bankAcc.getBalance());
+                ps.setString(3, bankAcc.getBankID());
+
+                if(bankAcc.getStatus()) ps.setString(2, "y");
+                else ps.setString(2, "n");
                 
-                f.delete();
-                FileIO.serialize(accountIDs, temp); 
+                ps.execute();
             }
-        }
+
+            ps.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }   
+
     }
 
     public String getEmployeeID() {

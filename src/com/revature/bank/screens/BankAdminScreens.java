@@ -15,7 +15,7 @@ public class BankAdminScreens {
 
     public static ArrayList<Integer> canceledOnes = new ArrayList<>();
 
-    public static void BankAdminMainMenu(BankAdmin bAd, Scanner sc) {
+    public static boolean BankAdminMainMenu(BankAdmin bAd, Scanner sc) {
 
         int opt;
         System.out.println("\nLogin successful! Hello " + bAd.toString() + "!");
@@ -58,7 +58,7 @@ public class BankAdminScreens {
             else {
                 //logout and write bank account arraylist to a file
                 bAd.writeAccounts();
-                break;
+                return true;
             }
 
         } while(true);
@@ -108,7 +108,7 @@ public class BankAdminScreens {
                             "1. Deposit money \n" + 
                             "2. Withdraw money \n" +
                             "3. Transfer money between the accounts \n" +
-                            "4. Go to home screen \n " + 
+                            "4. Go to home screen \n" + 
                             "Choice: ");
 
                 int moneyMoves;
@@ -192,11 +192,12 @@ public class BankAdminScreens {
                     case 3:
                         //Transfer money
                         if(totalAccs > 1) {
-                            System.out.print("\nWhich account would you like to transfer money from? Or press " + 
+                            System.out.println(" ");
+                            bAd.displayMyAccs();
+                            System.out.print("\nWhich account would you like to transfer money to? Or press " + 
                                 (totalAccs + 1) + " to go back \n" +
                                 "Choice: ");
                             do {
-                                bAd.displayMyAccs();
                                 try{
                                     try{
                                         choiceTransfer = Integer.parseInt(sc.nextLine());
@@ -217,26 +218,28 @@ public class BankAdminScreens {
                                 }
                             } while( true );
 
-                            System.out.println("How much would you like to transfer \n" + 
+                            if(choiceTransfer == totalAccs + 1) return;
+
+                            System.out.print("How much would you like to transfer \n" + 
                                     "Amount: ");
                             do {
                                 try{
                                     try{
                                         amt = Double.parseDouble(sc.nextLine());
                                     } catch(NumberFormatException e) {
-                                        System.out.println("\nPlease select a number \n" +
+                                        System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                                         continue;
                                     }
                                     
                                     if(amt > 0) break;
                                     else {
-                                        System.out.println("\nPlease select a number \n" +
+                                        System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                                     }
 
                                 } catch(InputMismatchException e) {
-                                    System.out.println("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                                 }
                             } while( true );
@@ -251,6 +254,7 @@ public class BankAdminScreens {
                     default:
                 }
             }
+            else return;
         }
         else return;
     }

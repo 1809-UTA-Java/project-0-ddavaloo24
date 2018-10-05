@@ -143,7 +143,6 @@ public class Login {
             lookupStatus = SuperDao.checkLogin(username, password);
             if(lookupStatus) {
                 currentCustomer = SuperDao.retrieveCustomerAccount(username, password);
-                //TODO: LOAD ACCOUNTS
                 currentCustomer.loadAccounts();
                 return currentCustomer;
             }
@@ -168,7 +167,7 @@ public class Login {
             lookupStatus = SuperDao.checkLogin(username, password);
             if(lookupStatus) {
                 currentEmployee = SuperDao.retrieveEmployeeAccount(username, password);
-                //TODO: LOAD ACCOUNTS
+                currentEmployee.loadAccounts();
                 return currentEmployee;
             }
             else {
@@ -193,7 +192,7 @@ public class Login {
             lookupStatus = SuperDao.checkLogin(username, password);
             if(lookupStatus) {
                 currentBankAdmin = SuperDao.retrieveAdminAccount(username, password);
-                //TODO: LOAD ACCOUNTS
+                currentBankAdmin.loadAccounts();
                 return currentBankAdmin;
             }
             else {

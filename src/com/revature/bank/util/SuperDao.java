@@ -175,7 +175,7 @@ public class SuperDao {
 
         try(Connection conn = ConnectionUtil.getConnection()) {
             
-            String sql = "SELECT * FROM EMPLOYEES WHERE c_username=? AND c_password=?";
+            String sql = "SELECT * FROM EMPLOYEES WHERE e_username=? AND e_password=?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, password);
@@ -207,7 +207,7 @@ public class SuperDao {
 
         try(Connection conn = ConnectionUtil.getConnection()) {
             
-            String sql = "SELECT * FROM ADMINS WHERE c_username=? AND c_password=?";
+            String sql = "SELECT * FROM ADMINS WHERE a_username=? AND a_password=?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, password);
@@ -259,7 +259,4 @@ public class SuperDao {
         System.out.println("That is not a valid account");
         return false;
     }
-
-
-    
 }

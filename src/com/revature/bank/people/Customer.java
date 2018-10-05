@@ -46,60 +46,45 @@ public class Customer extends User implements Serializable{
 
 
 
+    //Create a pending account
+    public String applyForJointAcc(String secondCID) {
 
+        PreparedStatement ps = null;
+        String sql = null;
 
+        BankAccount newBA = new BankAccount(lastName, 0, false);
+        myAccounts.add(newBA);  
 
-//Create a pending account
-public String applyForJointAcc(String secondCID) {
+        try(Connection conn = ConnectionUtil.getConnection()) {
 
-    PreparedStatement ps = null;
-    String sql = null;
+            sql = "INSERT INTO BANKACCOUNTS VALUES(?, ?, 'n')";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newBA.getBankID());
+            ps.setDouble(2, newBA.getBalance());
+            ps.execute();
 
-    BankAccount newBA = new BankAccount(lastName, 0);
-    myAccounts.add(newBA);  
+            sql = "INSERT INTO CUSTOMERBANKCONN VALUES(?, ?)";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, customerID);
+            ps.setString(2, newBA.getBankID());
+            ps.execute();
 
-    try(Connection conn = ConnectionUtil.getConnection()) {
+            sql = "INSERT INTO CUSTOMERBANKCONN VALUES(?, ?)";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, secondCID);
+            ps.setString(2, newBA.getBankID());
+            ps.execute();
 
-        sql = "INSERT INTO BANKACCOUNTS VALUES(?, ?, 'n')";
-        ps = conn.prepareStatement(sql);
-        ps.setString(1, newBA.getBankID());
-        ps.setDouble(2, newBA.getBalance());
-        ps.execute();
+            ps.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
 
-        sql = "INSERT INTO CUSTOMERBANKCONN VALUES(?, ?)";
-        ps = conn.prepareStatement(sql);
-        ps.setString(1, customerID);
-        ps.setString(2, newBA.getBankID());
-        ps.execute();
-
-        sql = "INSERT INTO CUSTOMERBANKCONN VALUES(?, ?)";
-        ps = conn.prepareStatement(sql);
-        ps.setString(1, secondCID);
-        ps.setString(2, newBA.getBankID());
-        ps.execute();
-
-        ps.close();
-    } catch(SQLException e) {
-        e.printStackTrace();
-    } catch(IOException e) {
-        e.printStackTrace();
-    }
-    
     return newBA.getBankID();
 
-}
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
     //Create a pending account
     public String applyForAcc() {
@@ -107,7 +92,7 @@ public String applyForJointAcc(String secondCID) {
         PreparedStatement ps = null;
         String sql = null;
 
-        BankAccount newBA = new BankAccount(lastName, 0);
+        BankAccount newBA = new BankAccount(lastName, 0, false);
         myAccounts.add(newBA);  
 
         try(Connection conn = ConnectionUtil.getConnection()) {
@@ -153,8 +138,14 @@ public String applyForJointAcc(String secondCID) {
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                BankAccount loader = new BankAccount(rs.getDouble("BALANCE"), rs.getString("B_ID"));
-                myAccounts.add(loader);
+                if( rs.getString("APPROVED").equals("n")) {
+                    BankAccount loader = new BankAccount(rs.getDouble("BALANCE"), rs.getString("B_ID"), false);
+                    myAccounts.add(loader);
+                }
+                else {
+                    BankAccount loader = new BankAccount(rs.getDouble("BALANCE"), rs.getString("B_ID"), true);
+                    myAccounts.add(loader);
+                }
             }
 
             ps.close();

@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class CustomerScreens {
 
-    public static void CustomerMainMenu(Customer c, Scanner sc) {
+    public static boolean CustomerMainMenu(Customer c, Scanner sc) {
 
         int opt;
         int type;
@@ -102,7 +102,7 @@ public class CustomerScreens {
             else {
                 //logout and write bank account arraylist to a file
                 c.writeAccounts();
-                break;
+                return true;
             }
         } while(true);
     }
@@ -260,6 +260,8 @@ public class CustomerScreens {
                                 }
                             } while( true );
 
+                            if(choiceTransfer == totalAccs + 1) return;
+
                             System.out.print("\nHow much would you like to transfer \n" + 
                                     "Amount: ");
                             do {
@@ -291,6 +293,9 @@ public class CustomerScreens {
                     break;
                     default:
                 }
+            }
+            else {
+                return;
             }
         }
     }

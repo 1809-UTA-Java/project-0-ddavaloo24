@@ -10,7 +10,7 @@ import com.revature.bank.logging.*;
 
 public class LoginScreen {
 
-    public static void loginMainMenu(Scanner sc) {
+    public static boolean loginMainMenu(Scanner sc) {
 
         Login login = new Login();
 
@@ -20,7 +20,6 @@ public class LoginScreen {
         BankAdmin currentBankAdmin = null;
 
         //Used to check if the correct input was given when asking for different inputs on the screens
-        boolean check;
         String answer;
         int type;
 
@@ -33,7 +32,7 @@ public class LoginScreen {
                 answer = sc.nextLine().toLowerCase().trim();
 
                 if(answer.equals("login") || answer.equals("signup")) break;
-                else if(answer.equals("exit")) return;
+                else if(answer.equals("exit")) return false;
                 else System.out.println("Sorry! I didn't get that! Please try again\n");
 
             } while(true);
@@ -89,9 +88,9 @@ public class LoginScreen {
         } while(true);
 
         //Log the user and give them the appropriate main menu
-        if(type == 1) CustomerScreens.CustomerMainMenu(currentCustomer, sc);
-        else if(type == 2) EmployeeScreens.EmployeeMainMenu(currentEmployee, sc);
-        else BankAdminScreens.BankAdminMainMenu(currentBankAdmin, sc);
+        if(type == 1) return CustomerScreens.CustomerMainMenu(currentCustomer, sc);
+        else if(type == 2) return EmployeeScreens.EmployeeMainMenu(currentEmployee, sc);
+        else return BankAdminScreens.BankAdminMainMenu(currentBankAdmin, sc);
     }
     
 }

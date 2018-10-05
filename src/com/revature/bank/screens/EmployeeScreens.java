@@ -9,7 +9,7 @@ import java.util.*;
  * Create the screen the employee sees with his options
  */
 public class EmployeeScreens {
-    public static void EmployeeMainMenu(Employee emp, Scanner sc) {
+    public static boolean EmployeeMainMenu(Employee emp, Scanner sc) {
 
         int opt;
         System.out.println("\nLogin successful! Hello " + emp.toString() + "!");
@@ -47,7 +47,7 @@ public class EmployeeScreens {
             //To look at all customer accounts and view their info
             if(opt == 1) emp.findAllCustomerAccs(sc);
             else if(opt == 2) emp.approveOrDeny(sc);   
-            else return;
+            else return true;
 
         } while (true);           
     }
