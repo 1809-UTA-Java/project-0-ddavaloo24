@@ -52,21 +52,12 @@ public class BankAdmin extends User implements Serializable {
         int choice = 0;
         boolean arrIndex = true;
         ArrayList<Integer> approvedIndex =  this.displayMyAccs();
-
-
-
-        System.out.println(approvedIndex);
-
-
-
-
-
-
         int totalAccs = approvedIndex.size();
 
         if(totalAccs != 0) {
             //Ask which account they want to cancel
-            System.out.println("\nWhich account would you like to cancel? Or press " + (totalAccs + 1) + " to go back");
+            System.out.print("\nWhich account would you like to cancel? Or press " + (totalAccs + 1) + " to go back \n" + 
+                    "Choice: ");
             do {
                 try{
                     try{
@@ -120,7 +111,7 @@ public class BankAdmin extends User implements Serializable {
 
                     myAccounts.set(myAccounts.indexOf(bA), null);
 
-                    System.out.println("\nDeny complete! Account " + bA.getBankID() + " has been removed");
+                    System.out.println("\nCancel complete! Account " + bA.getBankID() + " has been removed");
         
                     ps.close();
                 } catch(SQLException e) {
@@ -210,7 +201,7 @@ public class BankAdmin extends User implements Serializable {
             }
         }
 
-        if(i == 0) System.out.println("\n There are no pending accounts");
+        if(i == 0) System.out.println("\nThere are no pending accounts\n");
 
         Iterator<BankAccount> accIt = myAccounts.iterator();
         while(accIt.hasNext()) {

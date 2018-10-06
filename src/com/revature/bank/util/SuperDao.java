@@ -10,8 +10,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+
+/**
+ * Create a general dao pattern class that maintains most of 
+ * the data queries and alterations of the dbs such as logging
+ * and validations
+ */
 public class SuperDao {
 
+    //Insert the customer into the dbs
     public static void insertCustomer(String accID, String username, String password, String firstName, String lastName) {
         PreparedStatement ps = null;
 
@@ -32,7 +39,7 @@ public class SuperDao {
             e.printStackTrace();
         }
     }
-
+    //Insert the employee into the dbs
     public static void insertEmployee(String accID, String username, String password, String firstName, String lastName) {
         PreparedStatement ps = null;
 
@@ -54,6 +61,7 @@ public class SuperDao {
         }
     }
 
+    //Insert the admin into the dbs
     public static void insertAdmin(String accID, String username, String password, String firstName, String lastName) {
         PreparedStatement ps = null;
 
@@ -75,6 +83,7 @@ public class SuperDao {
         }
     }
 
+    //Check if username is unique against dbs
     public static boolean checkUsernameUnique(String username) {
         PreparedStatement ps = null;
         
@@ -105,6 +114,7 @@ public class SuperDao {
         return false;
     }
 
+    //Check if the user logging in has an account
     public static boolean checkLogin(String username, String password) {
         PreparedStatement ps = null;
 
@@ -137,6 +147,7 @@ public class SuperDao {
         return false;
     }
 
+    //If the login is correct retrieve the correct account
     public static Customer retrieveCustomerAccount(String username, String password) {
         PreparedStatement ps = null;
 
@@ -170,6 +181,7 @@ public class SuperDao {
         return null;
     }
 
+    //If the login is correct retrieve the correct account
     public static Employee retrieveEmployeeAccount(String username, String password) {
         PreparedStatement ps = null;
 
@@ -202,6 +214,7 @@ public class SuperDao {
         return null;
     }
 
+    //If the login is correct retrieve the correct account
     public static BankAdmin retrieveAdminAccount(String username, String password) {
         PreparedStatement ps = null;
 
@@ -234,6 +247,7 @@ public class SuperDao {
         return null;
     }
 
+    //Make sure the account the moey is going to is valid
     public static boolean jointAccountCheck(String CID) {
         PreparedStatement ps = null;
 

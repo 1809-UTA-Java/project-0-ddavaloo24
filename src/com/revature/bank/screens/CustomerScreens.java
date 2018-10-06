@@ -235,10 +235,12 @@ public class CustomerScreens {
                     case 3:
                         //Transfer money
                         if(totalAccs > 1) {
-                            System.out.print("\nWhich account would you like to transfer? Or press " + (totalAccs + 1) + " to go back \n" + 
-                                        "Choice: ");
+                            System.out.println(" ");
+                            c.displayMyAccs();
+                            System.out.print("\nWhich account would you like to transfer money to? Or press " + 
+                                (totalAccs + 1) + " to go back \n" +
+                                "Choice: ");
                             do {
-                                c.displayMyAccs();
                                 try{
                                     try{
                                         choiceTransfer = Integer.parseInt(sc.nextLine());
