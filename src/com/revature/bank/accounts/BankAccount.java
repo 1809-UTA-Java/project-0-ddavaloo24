@@ -45,7 +45,7 @@ public class BankAccount implements Serializable {
     public void withdraw( double amt ) {
         if((balance - amt) < 0 || amt <= 0) System.out.println("\nSorry but the amount inputted is invalid");
         else {
-            balance = balance - amt;
+            balance = (double) Math.round((balance - amt) * 100) / 100;;
 
             PreparedStatement ps = null;
 
@@ -76,7 +76,7 @@ public class BankAccount implements Serializable {
             System.out.println("Invalid value");
             return;
         }
-        balance = balance + amt;
+        balance = (double) Math.round((balance + amt) * 100) / 100;;
 
         PreparedStatement ps = null;
 
@@ -107,8 +107,8 @@ public class BankAccount implements Serializable {
             return;
         }
 
-        balance = balance - amt;
-        target.balance = target.balance + amt;
+        balance = (double) Math.round((balance - amt) * 100) / 100;
+        target.balance = (double) Math.round((target.balance + amt) * 100) / 100;
 
         PreparedStatement ps = null;
 

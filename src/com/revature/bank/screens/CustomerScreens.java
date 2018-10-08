@@ -110,11 +110,12 @@ public class CustomerScreens {
     public static void CustomerAccountScreen(Customer c, Scanner sc) {
         
         System.out.print("\n");
-        ArrayList<Integer> approvedIndex =  c.displayMyAccs();
+        ArrayList<BankAccount> approvedIndex =  c.displayMyAccs();
         int totalAccs = approvedIndex.size();
         int choice;
         int choiceTransfer;
         double amt;
+        double amtNotRounded;
         BankAccount currentAccount = null;
 
         if(totalAccs != 0) {
@@ -144,8 +145,8 @@ public class CustomerScreens {
             } while( true );
 
             if(choice != (totalAccs + 1)) {
-                int arrIndex = approvedIndex.get(choice - 1);
-                currentAccount = c.getAccount(arrIndex);
+                //int arrIndex = approvedIndex.get(choice - 1);
+                currentAccount = approvedIndex.get(choice - 1);
                 System.out.print("\nWhat would you like to do with your account? \n" +
                             "1. Deposit money \n" + 
                             "2. Withdraw money \n" +
@@ -184,7 +185,8 @@ public class CustomerScreens {
                         do {
                             try{
                                 try{
-                                    amt = Double.parseDouble(sc.nextLine());
+                                    amtNotRounded = Double.parseDouble(sc.nextLine());
+                                    amt = (double) Math.round(amtNotRounded * 100) / 100;
                                 } catch(NumberFormatException e) {
                                     System.out.print("\nPlease select a number \n" + 
                                             "Amount: ");
@@ -211,7 +213,8 @@ public class CustomerScreens {
                         do {
                             try{
                                 try{
-                                    amt = Double.parseDouble(sc.nextLine());
+                                    amtNotRounded = Double.parseDouble(sc.nextLine());
+                                    amt = (double) Math.round(amtNotRounded*100)/100;
                                 } catch(NumberFormatException e) {
                                     System.out.print("\nPlease select a number \n" + 
                                             "Amount: ");
@@ -252,7 +255,7 @@ public class CustomerScreens {
                     
                                     if((choiceTransfer < (totalAccs + 2)) && choiceTransfer > 0 && choice != choiceTransfer) break;
                                     else {
-                                        System.out.print("\nPlease choose from the above numbers \n" + 
+                                        System.out.print("\nPlease choose from the above numbers or a different destinatio\n" + 
                                                 "Choice: ");
                                     }
                     
@@ -269,7 +272,8 @@ public class CustomerScreens {
                             do {
                                 try{
                                     try{
-                                        amt = Double.parseDouble(sc.nextLine());
+                                        amtNotRounded = Double.parseDouble(sc.nextLine());
+                                        amt = (double) Math.round(amtNotRounded*100)/100;
                                     } catch(NumberFormatException e) {
                                         System.out.print("\nPlease select a number \n" +
                                                 "Amount: ");

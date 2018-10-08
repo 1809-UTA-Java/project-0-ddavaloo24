@@ -38,8 +38,9 @@ CREATE TABLE CUSTOMERBANKCONN (
 );
 
 CREATE TABLE TRANSACTIONS (
-	bank_ID varchar2(50),
-	transferID varchar(50) DEFAULT null,
-	type varchar2(50),
-	amount number(*,2) check (amount > 0)
+	b_ID varchar2(50),
+	t_time TIMESTAMP,
+	t_type varchar2(50),
+	amount number(*,2),
+    FOREIGN KEY (b_ID) REFERENCES BANKACCOUNTS(b_ID)
 );

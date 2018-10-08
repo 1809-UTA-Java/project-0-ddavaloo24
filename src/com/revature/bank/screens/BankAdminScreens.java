@@ -67,10 +67,11 @@ public class BankAdminScreens {
     //Page admin sees when it is trying to move money around
     public static void BankAdminAccountScreen(BankAdmin bAd, Scanner sc) {
         System.out.print("\n");
-        ArrayList<Integer> approvedIndex =  bAd.displayMyAccs();
+        ArrayList<BankAccount> approvedIndex =  bAd.displayMyAccs();
         int totalAccs = approvedIndex.size();
         int choice = 0;
         double amt = 0;
+        double amtNotRounded = 0;
         int choiceTransfer = 0;
         boolean loopCheck = true;
         BankAccount currentAccount = null;
@@ -101,9 +102,9 @@ public class BankAdminScreens {
             } while( loopCheck );
 
             if(choice != (totalAccs + 1)) {
-                int arrIndex = approvedIndex.get(choice - 1);
+                //int arrIndex = approvedIndex.get(choice - 1);
 
-                currentAccount = bAd.getAccount(arrIndex);
+                currentAccount =  approvedIndex.get(choice - 1);
                 System.out.print("\nWhat would you like to do with the account? \n" +
                             "1. Deposit money \n" + 
                             "2. Withdraw money \n" +
@@ -137,26 +138,27 @@ public class BankAdminScreens {
                 switch(moneyMoves) {
                     case 1:
                         //Parse money amount and deposit
-                        System.out.print("How much would you like to deposit \n" + 
+                        System.out.print("\nHow much would you like to deposit \n" + 
                                 "Amount: ");
                         do {
                             try{
                                 try{
-                                    amt = Double.parseDouble(sc.nextLine());
+                                    amtNotRounded = Double.parseDouble(sc.nextLine());
+                                    amt = (double) Math.round(amtNotRounded*100)/100;
                                 } catch(NumberFormatException e) {
-                                    System.out.println("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
                                 else {
-                                    System.out.println("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                                 }
                 
                             } catch(InputMismatchException e) {
-                                System.out.println("\nPlease select a number \n" +
+                                System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                             }
                         } while( true );
@@ -164,26 +166,28 @@ public class BankAdminScreens {
                     break;
                     case 2:
                         //Parse and withdraw
-                        System.out.print("How much would you like to withdraw \n" + 
+                        System.out.print("\nHow much would you like to withdraw \n" + 
                                 "Amount: ");
                         do {
                             try{
                                 try{
-                                    amt = Double.parseDouble(sc.nextLine());
+                                    amtNotRounded = Double.parseDouble(sc.nextLine());
+                                    amt = (double) Math.round(amtNotRounded*100)/100;
+
                                 } catch(NumberFormatException e) {
-                                    System.out.println("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
                                 else {
-                                    System.out.println("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                                 }
                 
                             } catch(InputMismatchException e) {
-                                System.out.println("\nPlease select a number \n" +
+                                System.out.print("\nPlease select a number \n" +
                                             "Amount: ");
                             }
                         } while( true );
@@ -208,7 +212,7 @@ public class BankAdminScreens {
                     
                                     if((choiceTransfer < (totalAccs + 2)) && choiceTransfer > 0 && choice != choiceTransfer) break;
                                     else {
-                                        System.out.print("\nPlease choose from the above numbers \n" +
+                                        System.out.print("\nPlease choose from the above accounts or a different destination \n" +
                                                 "Choice: ");
                                     }
                     
@@ -225,7 +229,8 @@ public class BankAdminScreens {
                             do {
                                 try{
                                     try{
-                                        amt = Double.parseDouble(sc.nextLine());
+                                        amtNotRounded = Double.parseDouble(sc.nextLine());
+                                        amt = (double) Math.round(amtNotRounded*100)/100;
                                     } catch(NumberFormatException e) {
                                         System.out.print("\nPlease select a number \n" +
                                             "Amount: ");

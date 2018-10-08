@@ -201,6 +201,7 @@ public class Employee extends User implements Serializable {
         String choice;
         PreparedStatement ps = null;
         String sql = null;
+        int i = 0;
 
         if(myAccounts.isEmpty()) {
             System.out.println("\nThere are no pending accounts");
@@ -209,6 +210,7 @@ public class Employee extends User implements Serializable {
 
         for(BankAccount bA : myAccounts) {
             if(bA.getStatus() == false) {
+                i++;
                 do {
                     System.out.print("\nWould you like to approve or deny account " + bA.getBankID() + "\n" + 
                         "Choice: ");
@@ -266,6 +268,8 @@ public class Employee extends User implements Serializable {
                 }
             }
         }
+
+        if(i == 0) System.out.println("\nThere are no pending accounts\n");
 
         Iterator<BankAccount> accIt = myAccounts.iterator();
         while(accIt.hasNext()) {

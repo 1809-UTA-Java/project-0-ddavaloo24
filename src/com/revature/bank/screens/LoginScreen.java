@@ -41,7 +41,7 @@ public class LoginScreen {
                 //If the user does not have an account, make one for them
                 login.createAccount(sc);
             }
-            else if(answer.equals("login")) {
+            if(answer.equals("login")) {
                 //If the user already has an account
                 do {
                     do {

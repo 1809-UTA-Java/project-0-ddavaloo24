@@ -51,7 +51,7 @@ public class BankAdmin extends User implements Serializable {
 
         int choice = 0;
         boolean arrIndex = true;
-        ArrayList<Integer> approvedIndex =  this.displayMyAccs();
+        ArrayList<BankAccount> approvedIndex =  this.displayMyAccs();
         int totalAccs = approvedIndex.size();
 
         if(totalAccs != 0) {
@@ -94,10 +94,15 @@ public class BankAdmin extends User implements Serializable {
                 try(Connection conn = ConnectionUtil.getConnection()) {
 
                     choice = choice - 1;
-                    BankAccount bA = myAccounts.get(choice);
+                    BankAccount bA = approvedIndex.get(choice);
 
                     PreparedStatement ps = null;
                     String sql;
+
+                    sql = "DELETE FROM TRANSACTIONS WHERE B_ID = ?";
+                    ps = conn.prepareStatement(sql);
+                    ps.setString(1, bA.getBankID());
+                    ps.execute();
 
                     sql = "DELETE FROM CUSTOMERBANKCONN WHERE B_ID = ?";
                     ps = conn.prepareStatement(sql);
@@ -188,7 +193,6 @@ public class BankAdmin extends User implements Serializable {
                         ps.execute();
 
                         myAccounts.set(myAccounts.indexOf(bA), null);
-
                         System.out.println("\nDeny complete! Account " + bA.getBankID() + " has been removed");
             
                         ps.close();

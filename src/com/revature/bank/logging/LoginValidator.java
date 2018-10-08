@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import com.revature.bank.util.ConnectionUtil;
 import com.revature.bank.util.SuperDao;
 
-class LoginValidator {
+public class LoginValidator {
 
     //Method to check whether the first or last name in the account creation stage is valid
     public static boolean nameChecker(String name) {
