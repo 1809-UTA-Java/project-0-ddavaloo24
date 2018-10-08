@@ -27,10 +27,10 @@ public abstract class User implements Serializable{
             }
 
     //Display the accounts and return the indicies of the approved accounts
-    public ArrayList<Integer> displayMyAccs() {
+    public ArrayList<BankAccount> displayMyAccs() {
         int i = 0;
         int approvedTotal = 0;
-        ArrayList<Integer> approvedIndex = new ArrayList<>();
+        ArrayList<BankAccount> approvedIndex = new ArrayList<>();
 
         if( myAccounts.isEmpty() ) System.out.println("You have no accounts.\n");
         else {
@@ -40,7 +40,7 @@ public abstract class User implements Serializable{
                 if(bA != null) {
                     if(bA.getStatus()) {
                         approvedTotal++;
-                        approvedIndex.add(myAccounts.indexOf(bA));
+                        approvedIndex.add(bA);
                         System.out.println(approvedTotal + ". " + bA.toString());
                     }
                 }

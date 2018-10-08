@@ -2,12 +2,17 @@ package com.revature.bank.logging;
 
 import java.io.Console;
 import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.io.*;
 
-import com.revature.bank.accounts.*;
+import com.revature.bank.accounts.BankAccount;
 import com.revature.bank.people.*;
-import com.revature.bank.dbs.*;
+import com.revature.bank.util.ConnectionUtil;
+import com.revature.bank.util.SuperDao;
+import com.revature.bank.dbs.FileIO;
 
 /**
  * 
@@ -21,21 +26,18 @@ public class Login {
     private Employee currentEmployee = null;
     private BankAdmin currentBankAdmin = null;
 
-    //Pathway to which all login files are stored
-    private String pathway = "/home/developer/Workspace/project-0-ddavaloo24/src/com/revature/bank/dbs/";
-
     //Holder variables
     private String username;
     private String password;
     private String firstName;
     private String lastName;
-    private int type;
-
-    //Used for checking account creation checks
-    private boolean checker;
 
     //Used to create an account for the user depending of which kind they want
     public void createAccount(Scanner sc) {
+
+        //Used for checking account creation checks
+        boolean checker;
+        int type;
 
         do {
             System.out.print("\nWhat kind of account would you like to make? \n" +
@@ -99,39 +101,26 @@ public class Login {
             checker = LoginValidator.passwordChecker(password);
         } while(checker);
 
-
-        //Write to the Logins.txt file the login information just created in a one line format
-        String pattern = username + "_" + password + "_" + firstName + "_" + lastName + "\n";
-
-        //Write the pattern of personal information to a central database of user accounts
-        FileIO.write("AllUserAccounts", pattern);
-
         //Create the account and persist it in a file
         switch(type) {
             case 1:
-            //Create a new customer and add to a doc that holds the username and customerID
-            //Also create a file that is titled the customerID and holds the customer object
-            Customer c = new Customer(username, password, firstName, lastName);
-            pattern = username + "\n" + c.getCustomerID() + "\n";
-            FileIO.write("AllCustomers", pattern);
-            FileIO.serialize(c.getCustomerID(), c);
+            //Create a new customer object and insert their fields in the dbs
+            Customer c = new Customer(username, password, firstName, lastName);            
+            SuperDao.insertCustomer(c.getCustomerID(), username, password, firstName, lastName);
             break;
+
             case 2:
-            //Create a new employee and store it into a file titled its employeeID
-            //Also add to file that holds all employee accounts using username and employeeID
+            //Create a new employee object and insert their fields in the dbs
             Employee e = new Employee(username, password, firstName, lastName);
-            pattern = username + "\n" + e.getEmployeeID() + "\n";
-            FileIO.write("AllEmployees", pattern);
-            FileIO.serialize(e.getEmployeeID(), e);
+            SuperDao.insertEmployee(e.getEmployeeID(), username, password, firstName, lastName);
             break;
+
             case 3:
-            //Create a new admin and serialize it into a file using the AdminID
-            //Add the admin username and ID to a database for admin
+            //Create a new admin object and insert their fields in the dbs
             BankAdmin b = new BankAdmin(username, password, firstName, lastName);
-            pattern = username + "\n" + b.getBankAdminID() + "\n";
-            FileIO.write("AllAdmins", pattern);
-            FileIO.serialize(b.getBankAdminID(), b);
+            SuperDao.insertAdmin(b.getBankAdminID(), username, password, firstName, lastName);
             break;
+
             default:
             System.out.println("Invalid person");
         }
@@ -143,40 +132,17 @@ public class Login {
     public Customer loginCustomer(Scanner sc) {
 
         boolean lookupStatus;
-        String accessor;
-        String fileName;
-        String fullFile = pathway + "AllCustomers";
-        File file = new File(fullFile);
+
+        System.out.println("\nPlease enter you username and password");
+        System.out.print("Username: ");
+        username = sc.nextLine();
+        System.out.print("Password: ");
+        password = sc.nextLine();
 
         do {
-            System.out.println("\nPlease enter you username and password");
-            System.out.print("Username: ");
-            username = sc.nextLine();
-            System.out.print("Password: ");
-            password = sc.nextLine();
-            String pattern = username + "_" + password + "_";
-
-            lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
+            lookupStatus = SuperDao.checkLogin(username, password);
             if(lookupStatus) {
-
-                fileName = null;
-                try(Scanner sc1 = new Scanner(file)) {
-                    while(sc1.hasNextLine()) {
-
-                        accessor = sc1.nextLine();
-                        if(accessor.equals(username)) {
-                            fileName = sc1.nextLine();
-                            break;
-                        }
-                    }
-                } catch(FileNotFoundException e) {
-                    System.out.println("There is no customer account with those credentials");
-                    continue;
-                }
-
-                if(fileName == null) return null;
-
-                currentCustomer = FileIO.deSerialize(fileName, Customer.class);
+                currentCustomer = SuperDao.retrieveCustomerAccount(username, password);
                 currentCustomer.loadAccounts();
                 return currentCustomer;
             }
@@ -185,48 +151,22 @@ public class Login {
                 return null;
             }
         } while(currentCustomer == null);
-
-        return null;
     }
 
     public Employee loginEmployee(Scanner sc) {
 
         boolean lookupStatus;
-        String accessor;
-        String fileName;
-        String fullFile = pathway + "AllEmployees";
-        File file = new File(fullFile);
+
+        System.out.println("\nPlease enter you username and password");
+        System.out.print("Username: ");
+        username = sc.nextLine();
+        System.out.print("Password: ");
+        password = sc.nextLine();
 
         do {
-            System.out.println("\nPlease enter you username and password");
-            System.out.print("Username: ");
-            username = sc.nextLine();
-            System.out.print("Password: ");
-            password = sc.nextLine();
-            String pattern = username + "_" + password + "_";
-
-            lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
+            lookupStatus = SuperDao.checkLogin(username, password);
             if(lookupStatus) {
-
-                fileName = null;
-                try(Scanner sc1 = new Scanner(file)) {
-                    while(sc1.hasNextLine()) {
-
-                        accessor = sc1.nextLine();
-                        if(accessor.equals(username)) {
-
-                            fileName = sc1.nextLine();
-                            break;
-                        }
-                    }
-                } catch(FileNotFoundException e) {
-                    System.out.println("There is no employee account with those credentials");
-                    continue;
-                }
-
-                if(fileName == null) return null;
-
-                currentEmployee = FileIO.deSerialize(fileName, Employee.class);
+                currentEmployee = SuperDao.retrieveEmployeeAccount(username, password);
                 currentEmployee.loadAccounts();
                 return currentEmployee;
             }
@@ -236,46 +176,22 @@ public class Login {
             }
         } while(currentEmployee == null);
 
-        return null;
     }
 
     public BankAdmin loginBankAdmin(Scanner sc) {
 
         boolean lookupStatus;
-        String accessor;
-        String fileName;
-        String fullFile = pathway + "AllAdmins";
-        File file = new File(fullFile);
+
+        System.out.println("\nPlease enter you username and password");
+        System.out.print("Username: ");
+        username = sc.nextLine();
+        System.out.print("Password: ");
+        password = sc.nextLine();
 
         do {
-            System.out.println("\nPlease enter you username and password");
-            System.out.print("Username: ");
-            username = sc.nextLine();
-            System.out.print("Password: ");
-            password = sc.nextLine();
-            String pattern = username + "_" + password + "_";
-
-            lookupStatus = FileIO.lookupLogin("AllUserAccounts", pattern);
+            lookupStatus = SuperDao.checkLogin(username, password);
             if(lookupStatus) {
-
-                fileName = null;
-                try(Scanner sc1 = new Scanner(file)) {
-                    while(sc1.hasNextLine()) {
-
-                        accessor = sc1.nextLine();
-                        if(accessor.equals(username)) {
-                            fileName = sc1.nextLine();
-                            break;
-                        }
-                    }
-                } catch(FileNotFoundException e) {
-                    System.out.println("There is no admin account with those credentials");
-                    continue;
-                }
-
-                if(fileName == null) return null;
-
-                currentBankAdmin = FileIO.deSerialize(fileName, BankAdmin.class);
+                currentBankAdmin = SuperDao.retrieveAdminAccount(username, password);
                 currentBankAdmin.loadAccounts();
                 return currentBankAdmin;
             }
@@ -285,6 +201,5 @@ public class Login {
             }
         } while(currentBankAdmin == null);
 
-        return null;
     }
 }

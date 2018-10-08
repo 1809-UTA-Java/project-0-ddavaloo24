@@ -11,10 +11,16 @@ public class Bank {
 
         //Initial initializations of login object and scanner to check for answers
         Scanner sc = new Scanner(System.in);
+        boolean exit = true;
 
         System.out.println("Welcome to the Bank of Darius!");
 
-        LoginScreen.loginMainMenu(sc);
+
+        do{
+            exit = LoginScreen.loginMainMenu(sc);
+
+        } while(exit);
+        
 
         sc.close();
     }
