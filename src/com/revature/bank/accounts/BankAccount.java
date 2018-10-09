@@ -28,8 +28,8 @@ public class BankAccount implements Serializable {
     //The default constructor setting all the fields
     public BankAccount(String lastName, double balance, boolean approved) {
         this.balance = balance;
-        this.accID = lastName + ( int )( Math.random() * 9999 ) + 1;
         this.approved = approved;
+        this.accID = lastName + ( int )( Math.random() * 9999 ) + 1;
     }
 
     public BankAccount(double balance, String accID, boolean approved) {
