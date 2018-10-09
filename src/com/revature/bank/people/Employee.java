@@ -99,11 +99,13 @@ public class Employee extends User implements Serializable {
             }
 
             if(allCustAccounts.isEmpty()) {
-                System.out.println("\nThere are no customer accounts");
+                System.out.println("\n----------------------------------------------------");
+                System.out.println("There are no customer accounts");
                 return;
             }
 
-            System.out.println("\nWhich account would you like to see? Or press " + (allCustAccounts.size() + 1) + " to go back.");
+            System.out.println("\n----------------------------------------------------");
+            System.out.println("Which account would you like to see? Or press " + (allCustAccounts.size() + 1) + " to go back.");
             for(int i = 0; i < allCustAccounts.size(); i++) {
                 System.out.println((i+1) + ". " + allCustAccounts.get(i));
             }
@@ -204,7 +206,9 @@ public class Employee extends User implements Serializable {
         int i = 0;
 
         if(myAccounts.isEmpty()) {
-            System.out.println("\nThere are no pending accounts");
+            System.out.println("\n----------------------------------------------------");
+            System.out.println("There are no pending accounts");
+
             return;
         }
 
@@ -212,7 +216,8 @@ public class Employee extends User implements Serializable {
             if(bA.getStatus() == false) {
                 i++;
                 do {
-                    System.out.print("\nWould you like to approve or deny account " + bA.getBankID() + "\n" + 
+                    System.out.println("\n----------------------------------------------------");
+                    System.out.print("Would you like to approve or deny account " + bA.getBankID() + "\n" + 
                         "Choice: ");
                 
                     choice = sc.nextLine().trim();

@@ -32,9 +32,13 @@ public abstract class User implements Serializable{
         int approvedTotal = 0;
         ArrayList<BankAccount> approvedIndex = new ArrayList<>();
 
-        if( myAccounts.isEmpty() ) System.out.println("You have no accounts.\n");
+        if( myAccounts.isEmpty() ) {
+            System.out.println("----------------------------------------------------");
+            System.out.println("You have no accounts.");
+        }
         else {
             //Print all approved accounts
+            System.out.println("\n----------------------------------------------------");
             System.out.println("Approved accounts: ");
             for(BankAccount bA : myAccounts) {
                 if(bA != null) {
@@ -61,7 +65,6 @@ public abstract class User implements Serializable{
 
             if(i == 0) System.out.println("There are no pending accounts");
 
-            System.out.print("\n");
         }
         return approvedIndex;
     }

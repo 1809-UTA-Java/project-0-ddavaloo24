@@ -20,6 +20,7 @@ public class CustomerScreens {
         System.out.println("\nLogin successful! Hello " + c.toString() + "!");
 
         do{
+            System.out.println("\n----------------------------------------------------");
             System.out.print("Would you like to: \n" +
                             "1. Display my bank accounts \n" +
                             "2. Apply for a new account \n" + 
@@ -53,7 +54,8 @@ public class CustomerScreens {
             if(opt == 1) CustomerScreens.CustomerAccountScreen(c, sc);
             //To apply for a joint or single account
             else if(opt == 2) {
-                System.out.print("\nWould you like to open a single or joint account? \n" +
+                System.out.println("\n----------------------------------------------------");
+                System.out.print("Would you like to open a single or joint account? \n" +
                             "1. Single \n" +
                             "2. Joint \n" + 
                             "Choice: ");
@@ -102,6 +104,7 @@ public class CustomerScreens {
             else {
                 //logout and write bank account arraylist to a file
                 c.writeAccounts();
+                System.out.println("\nYou have logged out!");
                 return true;
             }
         } while(true);
@@ -120,6 +123,7 @@ public class CustomerScreens {
 
         if(totalAccs != 0) {
             //Ask the user here if they wanna look at an account or go back
+            System.out.println("----------------------------------------------------");
             System.out.print("\nWhich approved account would you like to access? Or press " + (totalAccs + 1) + " to go back \n" +
                     "Choice: ");
             do {
@@ -145,9 +149,9 @@ public class CustomerScreens {
             } while( true );
 
             if(choice != (totalAccs + 1)) {
-                //int arrIndex = approvedIndex.get(choice - 1);
                 currentAccount = approvedIndex.get(choice - 1);
-                System.out.print("\nWhat would you like to do with your account? \n" +
+                System.out.println("\n----------------------------------------------------");
+                System.out.print("What would you like to do with your account? \n" +
                             "1. Deposit money \n" + 
                             "2. Withdraw money \n" +
                             "3. Transfer money between your accounts \n" +

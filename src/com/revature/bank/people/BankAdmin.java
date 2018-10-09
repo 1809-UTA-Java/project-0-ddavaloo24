@@ -141,7 +141,8 @@ public class BankAdmin extends User implements Serializable {
         int i = 0;
 
         if(myAccounts.isEmpty()) {
-            System.out.println("\nThere are no pending accounts");
+            System.out.println("\n----------------------------------------------------");
+            System.out.println("There are no pending accounts");
             return;
         }
 
@@ -149,7 +150,8 @@ public class BankAdmin extends User implements Serializable {
             if(bA.getStatus() == false) {
                 i++;
                 do {
-                    System.out.print("\nWould you like to approve or deny account " + bA.getBankID() + "\n" + 
+                    System.out.println("\n----------------------------------------------------");
+                    System.out.print("Would you like to approve or deny account " + bA.getBankID() + "\n" + 
                         "Choice: ");
                 
                     choice = sc.nextLine().trim();
@@ -205,7 +207,10 @@ public class BankAdmin extends User implements Serializable {
             }
         }
 
-        if(i == 0) System.out.println("\nThere are no pending accounts\n");
+        if(i == 0) {
+            System.out.println("\n----------------------------------------------------");
+            System.out.println("There are no pending accounts\n");
+        } 
 
         Iterator<BankAccount> accIt = myAccounts.iterator();
         while(accIt.hasNext()) {

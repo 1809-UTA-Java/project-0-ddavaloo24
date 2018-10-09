@@ -15,7 +15,8 @@ public class EmployeeScreens {
         System.out.println("\nLogin successful! Hello " + emp.toString() + "!");
 
         do{
-            System.out.print("\nWould you like to: \n" +
+            System.out.println("\n----------------------------------------------------");
+            System.out.print("Would you like to: \n" +
                             "1. View customer information \n" +
                             "2. Approve / Deny accounts \n" + 
                             "3. Logout \n" + 
@@ -47,7 +48,10 @@ public class EmployeeScreens {
             //To look at all customer accounts and view their info
             if(opt == 1) emp.findAllCustomerAccs(sc);
             else if(opt == 2) emp.approveOrDeny(sc);   
-            else return true;
+            else {
+                System.out.println("\nYou have logged out!");
+                return true;
+            } 
 
         } while (true);           
     }

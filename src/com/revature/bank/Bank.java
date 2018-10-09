@@ -20,6 +20,8 @@ public class Bank {
             exit = LoginScreen.loginMainMenu(sc);
 
         } while(exit);
+
+        System.out.println("\nHave a good day!");
         
 
         sc.close();

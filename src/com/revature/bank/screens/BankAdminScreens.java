@@ -21,6 +21,7 @@ public class BankAdminScreens {
         System.out.println("\nLogin successful! Hello " + bAd.toString() + "!");
 
         do{
+            System.out.println("\n----------------------------------------------------");
             System.out.print("Would you like to: \n" +
                             "1. Display all bank accounts \n" +
                             "2. Approve / Deny accounts \n" + 
@@ -58,6 +59,7 @@ public class BankAdminScreens {
             else {
                 //logout and write bank account arraylist to a file
                 bAd.writeAccounts();
+                System.out.println("\nYou have logged out!");
                 return true;
             }
 
@@ -78,6 +80,7 @@ public class BankAdminScreens {
 
         if(totalAccs != 0) {
             //Ask the user here if they wanna look at an account or go back
+            System.out.println("----------------------------------------------------");
             System.out.print("\nWhich account would you like to access? Or press " + (totalAccs + 1) + " to go back \n" + 
                         "Choice: ");
             do {
@@ -105,7 +108,8 @@ public class BankAdminScreens {
                 //int arrIndex = approvedIndex.get(choice - 1);
 
                 currentAccount =  approvedIndex.get(choice - 1);
-                System.out.print("\nWhat would you like to do with the account? \n" +
+                System.out.println("\n----------------------------------------------------");
+                System.out.print("What would you like to do with the account? \n" +
                             "1. Deposit money \n" + 
                             "2. Withdraw money \n" +
                             "3. Transfer money between the accounts \n" +
@@ -224,7 +228,7 @@ public class BankAdminScreens {
 
                             if(choiceTransfer == totalAccs + 1) return;
 
-                            System.out.print("How much would you like to transfer \n" + 
+                            System.out.print("\nHow much would you like to transfer \n" + 
                                     "Amount: ");
                             do {
                                 try{
@@ -253,7 +257,7 @@ public class BankAdminScreens {
                             currentAccount.transfer(amt, secondAcc);
                         }
                         else {
-                            System.out.println("You do not have enough accounts!");
+                            System.out.println("\nYou do not have enough accounts!");
                         }
                     break;
                     default:
