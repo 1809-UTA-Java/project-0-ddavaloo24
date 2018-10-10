@@ -54,6 +54,12 @@ public class BankAdmin extends User implements Serializable {
         ArrayList<BankAccount> approvedIndex =  this.displayMyAccs();
         int totalAccs = approvedIndex.size();
 
+        if(totalAccs == 0) {
+            System.out.println("\n----------------------------------------------------");
+            System.out.println("There are no accounts to cancel");
+            return;
+        }
+
         if(totalAccs != 0) {
             //Ask which account they want to cancel
             System.out.print("\nWhich account would you like to cancel? Or press " + (totalAccs + 1) + " to go back \n" + 
@@ -63,7 +69,8 @@ public class BankAdmin extends User implements Serializable {
                     try{
                         choice = Integer.parseInt(sc.nextLine());
                     } catch(NumberFormatException e) {
-                        System.out.println("\nPlease choose from the above numbers");
+                        System.out.print("\nPlease choose from the above numbers \n" +
+                                "Choice: ");
                         continue;
                     }
     
@@ -81,11 +88,14 @@ public class BankAdmin extends User implements Serializable {
 
                         if(arrIndex == true) System.out.println("That account was already canceled. Please try a different number");
                     }
-                    else System.out.println("Please choose from the above numbers");
-    
+                    else {
+                        System.out.print("Please choose from the above numbers \n" +
+                            "Choice: ");
+                    }
+                    
                 } catch(InputMismatchException e) {
-                    System.out.println("Please choose from the above numbers");
-                    sc.nextLine();
+                    System.out.print("Please choose from the above numbers \n" +
+                            "Choice: ");
                 }
             } while(arrIndex);
 
@@ -141,8 +151,7 @@ public class BankAdmin extends User implements Serializable {
         int i = 0;
 
         if(myAccounts.isEmpty()) {
-            System.out.println("\n----------------------------------------------------");
-            System.out.println("There are no pending accounts");
+            System.out.println("\nThere are no pending accounts");
             return;
         }
 
@@ -208,8 +217,7 @@ public class BankAdmin extends User implements Serializable {
         }
 
         if(i == 0) {
-            System.out.println("\n----------------------------------------------------");
-            System.out.println("There are no pending accounts\n");
+            System.out.println("\nThere are no pending accounts\n");
         } 
 
         Iterator<BankAccount> accIt = myAccounts.iterator();

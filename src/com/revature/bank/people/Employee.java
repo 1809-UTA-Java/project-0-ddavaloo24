@@ -206,8 +206,7 @@ public class Employee extends User implements Serializable {
         int i = 0;
 
         if(myAccounts.isEmpty()) {
-            System.out.println("\n----------------------------------------------------");
-            System.out.println("There are no pending accounts");
+            System.out.println("\nThere are no pending accounts");
 
             return;
         }

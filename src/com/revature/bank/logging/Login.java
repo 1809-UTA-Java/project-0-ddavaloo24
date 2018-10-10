@@ -40,7 +40,7 @@ public class Login {
         int type;
 
         do {
-            System.out.print("What kind of account would you like to make? \n" +
+            System.out.print("\nWhat kind of account would you like to make? \n" +
                                 "1. Customer \n" +
                                 "2. Employee \n" +
                                 "3. Admin \n" + 

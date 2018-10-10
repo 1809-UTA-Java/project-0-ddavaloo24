@@ -68,7 +68,6 @@ public class BankAdminScreens {
 
     //Page admin sees when it is trying to move money around
     public static void BankAdminAccountScreen(BankAdmin bAd, Scanner sc) {
-        System.out.print("\n");
         ArrayList<BankAccount> approvedIndex =  bAd.displayMyAccs();
         int totalAccs = approvedIndex.size();
         int choice = 0;
@@ -81,7 +80,7 @@ public class BankAdminScreens {
         if(totalAccs != 0) {
             //Ask the user here if they wanna look at an account or go back
             System.out.println("----------------------------------------------------");
-            System.out.print("\nWhich account would you like to access? Or press " + (totalAccs + 1) + " to go back \n" + 
+            System.out.print("\nWhich approved account would you like to access? Or press " + (totalAccs + 1) + " to go back \n" + 
                         "Choice: ");
             do {
                 try{
@@ -105,7 +104,6 @@ public class BankAdminScreens {
             } while( loopCheck );
 
             if(choice != (totalAccs + 1)) {
-                //int arrIndex = approvedIndex.get(choice - 1);
 
                 currentAccount =  approvedIndex.get(choice - 1);
                 System.out.println("\n----------------------------------------------------");
@@ -150,19 +148,19 @@ public class BankAdminScreens {
                                     amtNotRounded = Double.parseDouble(sc.nextLine());
                                     amt = (double) Math.round(amtNotRounded*100)/100;
                                 } catch(NumberFormatException e) {
-                                    System.out.print("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
                                 else {
-                                    System.out.print("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                                 }
                 
                             } catch(InputMismatchException e) {
-                                System.out.print("\nPlease select a number \n" +
+                                System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                             }
                         } while( true );
@@ -179,19 +177,19 @@ public class BankAdminScreens {
                                     amt = (double) Math.round(amtNotRounded*100)/100;
 
                                 } catch(NumberFormatException e) {
-                                    System.out.print("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
                                 else {
-                                    System.out.print("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                                 }
                 
                             } catch(InputMismatchException e) {
-                                System.out.print("\nPlease select a number \n" +
+                                System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                             }
                         } while( true );
@@ -236,19 +234,19 @@ public class BankAdminScreens {
                                         amtNotRounded = Double.parseDouble(sc.nextLine());
                                         amt = (double) Math.round(amtNotRounded*100)/100;
                                     } catch(NumberFormatException e) {
-                                        System.out.print("\nPlease select a number \n" +
+                                        System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                                         continue;
                                     }
                                     
                                     if(amt > 0) break;
                                     else {
-                                        System.out.print("\nPlease select a number \n" +
+                                        System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                                     }
 
                                 } catch(InputMismatchException e) {
-                                    System.out.print("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a positive, valid number \n" +
                                             "Amount: ");
                                 }
                             } while( true );

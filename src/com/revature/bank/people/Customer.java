@@ -82,7 +82,8 @@ public class Customer extends User implements Serializable{
             e.printStackTrace();
         }
 
-    return newBA.getBankID();
+
+        return newBA.getBankID();
 
     }
 

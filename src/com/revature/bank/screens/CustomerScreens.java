@@ -192,19 +192,19 @@ public class CustomerScreens {
                                     amtNotRounded = Double.parseDouble(sc.nextLine());
                                     amt = (double) Math.round(amtNotRounded * 100) / 100;
                                 } catch(NumberFormatException e) {
-                                    System.out.print("\nPlease select a number \n" + 
+                                    System.out.print("\nPlease select a positive, valid number \n" + 
                                             "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
                                 else {
-                                    System.out.print("\nPlease select a number \n" + 
+                                    System.out.print("\nPlease select a positive, valid number \n" + 
                                             "Amount: ");
                                 }
                                 
                             } catch(InputMismatchException e) {
-                                System.out.print("\nPlease select a number \n" + 
+                                System.out.print("\nPlease select a positive, valid number \n" + 
                                             "Amount: ");
                             }
                         } while( true );
@@ -220,19 +220,19 @@ public class CustomerScreens {
                                     amtNotRounded = Double.parseDouble(sc.nextLine());
                                     amt = (double) Math.round(amtNotRounded*100)/100;
                                 } catch(NumberFormatException e) {
-                                    System.out.print("\nPlease select a number \n" + 
+                                    System.out.print("\nPlease select a positive, valid number \n" + 
                                             "Amount: ");
                                     continue;
                                 }
                 
                                 if(amt > 0) break;
                                 else {
-                                    System.out.print("\nPlease select a number \n" + 
+                                    System.out.print("\nPlease select a positive, valid number \n" + 
                                             "Amount: ");
                                 }
                 
                             } catch(InputMismatchException e) {
-                                System.out.print("\nPlease select a number \n" + 
+                                System.out.print("\nPlease select a positive, valid number \n" + 
                                             "Amount: ");
                             }
                         } while( true );
@@ -279,19 +279,19 @@ public class CustomerScreens {
                                         amtNotRounded = Double.parseDouble(sc.nextLine());
                                         amt = (double) Math.round(amtNotRounded*100)/100;
                                     } catch(NumberFormatException e) {
-                                        System.out.print("\nPlease select a number \n" +
+                                        System.out.print("\nPlease select a positive, valid number \n" +
                                                 "Amount: ");
                                         continue;
                                     }
 
                                     if(amt > 0) break;
                                     else {
-                                        System.out.print("\nPlease select a number \n" +
+                                        System.out.print("\nPlease select a positive, valid number \n" +
                                                 "Amount: ");
                                     }
 
                                 } catch(InputMismatchException e) {
-                                    System.out.print("\nPlease select a number \n" +
+                                    System.out.print("\nPlease select a positive, valid number \n" +
                                                 "Amount: ");
                                 }
                             } while( true );
