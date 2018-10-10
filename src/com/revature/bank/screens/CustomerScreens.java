@@ -112,7 +112,6 @@ public class CustomerScreens {
 
     public static void CustomerAccountScreen(Customer c, Scanner sc) {
         
-        System.out.print("\n");
         ArrayList<BankAccount> approvedIndex =  c.displayMyAccs();
         int totalAccs = approvedIndex.size();
         int choice;
@@ -123,7 +122,6 @@ public class CustomerScreens {
 
         if(totalAccs != 0) {
             //Ask the user here if they wanna look at an account or go back
-            System.out.println("----------------------------------------------------");
             System.out.print("\nWhich approved account would you like to access? Or press " + (totalAccs + 1) + " to go back \n" +
                     "Choice: ");
             do {
@@ -209,6 +207,7 @@ public class CustomerScreens {
                             }
                         } while( true );
                         currentAccount.deposit(amt);
+                        c.writeAccounts();
                     break;
                     case 2:
                         //Parse and withdraw

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
+import com.revature.bank.accounts.BankAccount;
 import com.revature.bank.logging.*;
 import com.revature.bank.people.BankAdmin;
 import com.revature.bank.util.*;
@@ -46,6 +47,7 @@ public class LoginTest {
         assertEquals(checker, actual);
     }
 
+    @Test
     public void insertTest() {
 
         String username = "tester123";
@@ -80,7 +82,7 @@ public class LoginTest {
                 }
             }
 
-            assertEquals(actual, false);
+            assertEquals(actual, true);
 
             ps.close();
             rs.close();
@@ -89,5 +91,53 @@ public class LoginTest {
         } catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void denyTest() {
+
+        String sql;
+        PreparedStatement ps = null;
+        boolean flag = true;
+        boolean actual = true;
+
+        //Deny the account
+        try(Connection conn = ConnectionUtil.getConnection()) {
+
+            sql = "INSERT INTO BANKACCOUNTS VALUES(?,?,?)";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "test12345");
+            ps.setDouble(2, 20.01);
+            ps.setString(3, "n");
+
+            sql = "SELECT * FROM BANKACCOUNTS WHERE B_ID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "test12345");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                flag = true;
+            }
+
+            sql = "DELETE FROM BANKACCOUNTS WHERE B_ID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "test12345");
+            ps.execute();
+
+            sql = "SELECT * FROM BANKACCOUNTS WHERE B_ID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "test12345");
+            rs = ps.executeQuery();
+
+            System.out.println("\nDeny complete! Account test12345 has been removed");
+
+            ps.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }   
+
+        assertEquals(flag, actual);
     }
 }

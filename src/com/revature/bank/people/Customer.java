@@ -84,7 +84,6 @@ public class Customer extends User implements Serializable{
 
 
         return newBA.getBankID();
-
     }
 
     //Create a pending account
@@ -173,7 +172,8 @@ public class Customer extends User implements Serializable{
                 ps.execute();
             }
 
-            ps.close();
+            if(!myAccounts.isEmpty()) ps.close();
+            
         } catch(SQLException e) {
             e.printStackTrace();
         } catch(IOException e) {

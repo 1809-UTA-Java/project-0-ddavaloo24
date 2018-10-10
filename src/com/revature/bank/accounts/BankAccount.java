@@ -145,7 +145,8 @@ public class BankAccount implements Serializable {
 
     //Overriden to print the account number and corresponding balance
     public String toString() {
-        return (accID + " has a balance of $" + balance);
+        String strDouble = String.format("%.2f", balance);
+        return (accID + " has a balance of $" + strDouble);
     }
 
     //Getter method for retrieving the ID of the current bank account

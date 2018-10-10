@@ -33,8 +33,9 @@ public abstract class User implements Serializable{
         ArrayList<BankAccount> approvedIndex = new ArrayList<>();
 
         if( myAccounts.isEmpty() ) {
-            System.out.println("----------------------------------------------------");
-            System.out.println("You have no accounts.");
+            System.out.println("\n----------------------------------------------------");
+            System.out.println("There are no available accounts.");
+            return approvedIndex;
         }
         else {
             //Print all approved accounts

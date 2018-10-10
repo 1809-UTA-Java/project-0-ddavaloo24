@@ -79,7 +79,6 @@ public class BankAdminScreens {
 
         if(totalAccs != 0) {
             //Ask the user here if they wanna look at an account or go back
-            System.out.println("----------------------------------------------------");
             System.out.print("\nWhich approved account would you like to access? Or press " + (totalAccs + 1) + " to go back \n" + 
                         "Choice: ");
             do {
@@ -165,6 +164,8 @@ public class BankAdminScreens {
                             }
                         } while( true );
                         currentAccount.deposit(amt);
+                        bAd.writeAccounts();
+
                     break;
                     case 2:
                         //Parse and withdraw
@@ -193,7 +194,9 @@ public class BankAdminScreens {
                                             "Amount: ");
                             }
                         } while( true );
+
                         currentAccount.withdraw(amt);
+                        bAd.writeAccounts();
                     break;
                     case 3:
                         //Transfer money
@@ -253,6 +256,7 @@ public class BankAdminScreens {
 
                             BankAccount secondAcc = bAd.getAccount(choiceTransfer - 1);
                             currentAccount.transfer(amt, secondAcc);
+                            bAd.writeAccounts();
                         }
                         else {
                             System.out.println("\nYou do not have enough accounts!");
